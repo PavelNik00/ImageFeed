@@ -104,12 +104,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z4y-Rn-plN">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="Z4y-Rn-plN">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="rq0-EC-wRA">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="414" image="0_full_size" translatesAutoresizingMaskIntoConstraints="NO" id="rq0-EC-wRA">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
-                                        <color key="backgroundColor" name="YP Black"/>
                                     </imageView>
                                 </subviews>
                                 <constraints>
@@ -121,7 +120,7 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="ZGj-Rd-Hcs"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="OAc-KX-q7A"/>
                                 <connections>
-                                    <outlet property="delegate" destination="cWn-j3-bH1" id="7ZV-ke-8qu"/>
+                                    <outlet property="delegate" destination="cWn-j3-bH1" id="QNa-3N-LYN"/>
                                 </connections>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aRT-ha-cCX">
@@ -160,6 +159,7 @@
                             <constraint firstItem="Z4y-Rn-plN" firstAttribute="leading" secondItem="z1e-k0-JEO" secondAttribute="leading" id="xds-5F-YR1"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="hgq-jR-XZ7" userLabel="Navigation Item"/>
                     <connections>
                         <outlet property="imageView" destination="rq0-EC-wRA" id="cyj-ac-y9f"/>
                         <outlet property="scrollView" destination="Z4y-Rn-plN" id="d5r-gG-BVR"/>
@@ -299,6 +299,7 @@
     </scenes>
     <resources>
         <image name="0" width="200" height="132"/>
+        <image name="0_full_size" width="1200" height="795"/>
         <image name="Avatar " width="70" height="70"/>
         <image name="Backward" width="24" height="24"/>
         <image name="Share_button" width="51" height="50"/>
