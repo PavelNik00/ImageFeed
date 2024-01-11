@@ -15,6 +15,7 @@ final class SingleImageViewController: UIViewController {
         }
     }
     
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet private var imageView: UIImageView!
     
     override func viewDidLoad() {
@@ -25,7 +26,17 @@ final class SingleImageViewController: UIViewController {
     @IBAction private func didTapBackButton() {
         dismiss(animated: true, completion: nil)
     }
-    
-    @IBOutlet weak var scrollView: UIScrollView!
-    
+    @IBAction func didTapShareButton(_ sender: Any) {
+        let share = UIActivityViewController(
+            activityItems: [image],
+            applicationActivities: nil
+        )
+        present(share, animated: true, completion: nil)
+    }
+}
+
+extension SingleImageViewController: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        imageView
+    }
 }
