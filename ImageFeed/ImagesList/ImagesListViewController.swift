@@ -1,7 +1,7 @@
 import UIKit
 
 final class ImagesListViewController: UIViewController {
-    private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
+    private let showSingleImageSegueIdentifier = "ShowSingleImage"
     
     @IBOutlet private var tableView: UITableView!
     
@@ -20,15 +20,22 @@ final class ImagesListViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            if segue.identifier == ShowSingleImageSegueIdentifier {
-                let viewController = segue.destination as! SingleImageViewController
-                let indexPath = sender as! IndexPath
-                let imageName = photosName[indexPath.row]
-                let image = UIImage(named: "\(imageName)_full_size") ?? UIImage(named: imageName)
-                viewController.image = image
-            } else {
-                super.prepare(for: segue, sender: sender)
-            }
+        guard segue.identifier == showSingleImageSegueIdentifier,
+              let viewController = segue.destination as? SingleImageViewController,
+              let indexPath = sender as? IndexPath  else {
+            super.prepare(for: segue, sender: sender)
+            return
+        }
+        
+//            if segue.identifier == showSingleImageSegueIdentifier {
+//                let viewController = segue.destination as! SingleImageViewController
+//                let indexPath = sender as! IndexPath
+//                let imageName = photosName[indexPath.row]
+//                let image = UIImage(named: "\(imageName)_full_size") ?? UIImage(named: imageName)
+//                viewController.image = image
+//            } else {
+//                super.prepare(for: segue, sender: sender)
+//            }
     }
 }
 
@@ -69,7 +76,7 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            performSegue(withIdentifier: ShowSingleImageSegueIdentifier, sender: indexPath)
+            performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
         }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
