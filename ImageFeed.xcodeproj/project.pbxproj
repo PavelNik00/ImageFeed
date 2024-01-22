@@ -19,6 +19,7 @@
 		E9A507FC2B18D2ED0009D5B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9A507FB2B18D2ED0009D5B5 /* Assets.xcassets */; };
 		E9A507FF2B18D2ED0009D5B5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9A507FD2B18D2ED0009D5B5 /* LaunchScreen.storyboard */; };
 		E9E196FD2B5F237000E666AA /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E196FC2B5F237000E666AA /* AuthViewController.swift */; };
+		E9E197002B5F2E9200E666AA /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E196FF2B5F2E9200E666AA /* WebViewViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		E9A507FE2B18D2ED0009D5B5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E9A508002B18D2ED0009D5B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9E196FC2B5F237000E666AA /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		E9E196FF2B5F2E9200E666AA /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				E9E196FC2B5F237000E666AA /* AuthViewController.swift */,
+				E9E196FF2B5F2E9200E666AA /* WebViewViewController.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -196,6 +199,7 @@
 				E9E196FD2B5F237000E666AA /* AuthViewController.swift in Sources */,
 				E9A0C3472B598BDE001AEF1D /* Constants.swift in Sources */,
 				E970FE742B474DEE00F7B928 /* SingleImageViewController.swift in Sources */,
+				E9E197002B5F2E9200E666AA /* WebViewViewController.swift in Sources */,
 				E9A507F52B18D2EB0009D5B5 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
