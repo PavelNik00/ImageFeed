@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PYR-cH-Euo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="oU5-jN-dWa">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -94,7 +94,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="102.89855072463769" y="-185.49107142857142"/>
+            <point key="canvasLocation" x="1013.0434782608696" y="-185.49107142857142"/>
         </scene>
         <!--Single Image View Controller-->
         <scene sceneID="efE-3z-q3B">
@@ -167,7 +167,59 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pY6-er-BWI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1017" y="-185"/>
+            <point key="canvasLocation" x="1926.0869565217392" y="-185.49107142857142"/>
+        </scene>
+        <!--AuthViewController-->
+        <scene sceneID="fwv-32-5kL">
+            <objects>
+                <viewController id="gh1-lQ-85u" userLabel="AuthViewController" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cYh-Kf-jSw">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="auth_screen_logo" translatesAutoresizingMaskIntoConstraints="NO" id="hpe-zO-voL">
+                                <rect key="frame" x="177" y="447" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="5hX-Xe-kze"/>
+                                    <constraint firstAttribute="width" constant="60" id="JWJ-97-Ofu"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AhV-YY-eBE">
+                                <rect key="frame" x="16" y="688" width="382" height="48"/>
+                                <color key="backgroundColor" name="YP White"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="XoT-mD-nK0"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="tintColor" name="YP Black"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Войти">
+                                    <color key="titleColor" name="YP Black"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="16"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="39s-cC-4ed"/>
+                        <color key="backgroundColor" name="YP Black"/>
+                        <constraints>
+                            <constraint firstItem="AhV-YY-eBE" firstAttribute="centerX" secondItem="cYh-Kf-jSw" secondAttribute="centerX" id="2sv-gB-qAY"/>
+                            <constraint firstItem="AhV-YY-eBE" firstAttribute="leading" secondItem="39s-cC-4ed" secondAttribute="leading" constant="16" id="Uf3-lJ-qjh"/>
+                            <constraint firstItem="39s-cC-4ed" firstAttribute="trailing" secondItem="AhV-YY-eBE" secondAttribute="trailing" constant="16" id="X6S-Of-vem"/>
+                            <constraint firstItem="hpe-zO-voL" firstAttribute="centerX" secondItem="39s-cC-4ed" secondAttribute="centerX" id="ZAz-lm-6N2"/>
+                            <constraint firstItem="hpe-zO-voL" firstAttribute="centerY" secondItem="39s-cC-4ed" secondAttribute="centerY" id="g3f-pX-FKC"/>
+                            <constraint firstItem="AhV-YY-eBE" firstAttribute="top" secondItem="39s-cC-4ed" secondAttribute="top" constant="596" id="qUk-Na-5wH"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Pcf-ER-qUP"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YKq-GT-XbM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1773.913043478261" y="91.741071428571431"/>
         </scene>
         <!--Profile-->
         <scene sceneID="oET-z6-ZMl">
@@ -184,7 +236,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hat-DG-skt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-806" y="576"/>
+            <point key="canvasLocation" x="102.89855072463769" y="575.89285714285711"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Bz7-4g-vGT">
@@ -206,7 +258,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uZf-fL-5Aq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1813" y="92"/>
+            <point key="canvasLocation" x="-902.89855072463774" y="91.741071428571431"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hvy-US-1uy">
@@ -230,7 +282,25 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O0y-6Z-PJw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-807.24637681159425" y="-185.49107142857142"/>
+            <point key="canvasLocation" x="102.89855072463769" y="-185.49107142857142"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Kzc-BM-8xc">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="oU5-jN-dWa" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Udl-qV-tud">
+                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="gh1-lQ-85u" kind="relationship" relationship="rootViewController" id="SrV-jO-JDg"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Xa3-mo-P9I" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2684.057971014493" y="91.741071428571431"/>
         </scene>
     </scenes>
     <resources>
@@ -238,6 +308,7 @@
         <image name="0_full_size" width="1200" height="795"/>
         <image name="Backward" width="24" height="24"/>
         <image name="Share_button" width="51" height="50"/>
+        <image name="auth_screen_logo" width="60" height="60"/>
         <image name="like_button_on" width="44" height="44"/>
         <image name="tab_editorial_active" width="75" height="49"/>
         <image name="tab_profile_active " width="75" height="49"/>
