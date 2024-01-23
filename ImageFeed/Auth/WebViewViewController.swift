@@ -14,8 +14,7 @@ final class WebViewViewController: UIViewController {
     
     @IBOutlet private var webView: WKWebView!
     
-    @IBAction func didTapButton(_ sender: Any) {
-    }
+    weak var delegate: WebViewViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +32,10 @@ final class WebViewViewController: UIViewController {
         
         let request = URLRequest(url: url)
         webView.load(request)
+    }
+    
+    @IBAction func didTapButton(_ sender: Any?) {
+        delegate?.webViewViewControllerDidCancel(self)
     }
 }
 
@@ -63,4 +66,9 @@ extension WebViewViewController: WKNavigationDelegate {
             return nil
         }
     }
+}
+
+protocol WebViewViewControllerDelegate: AnyObject {
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
