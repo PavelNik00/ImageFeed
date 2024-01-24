@@ -6,7 +6,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -253,12 +252,20 @@
                                     <action selector="didTapButton:" destination="ZZL-0H-GXK" eventType="touchUpInside" id="Aeb-tO-4eF"/>
                                 </connections>
                             </button>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="kjd-Xk-iNy">
+                                <rect key="frame" x="0.0" y="40" width="414" height="4"/>
+                                <color key="backgroundColor" name="YP White"/>
+                                <color key="tintColor" name="YP Black"/>
+                            </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Rfp-CV-QQi"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" name="YP Black"/>
                         <constraints>
+                            <constraint firstItem="kjd-Xk-iNy" firstAttribute="leading" secondItem="63v-8o-blB" secondAttribute="leading" id="1FX-Eu-1m9"/>
                             <constraint firstItem="FaF-pj-mZ1" firstAttribute="top" secondItem="63v-8o-blB" secondAttribute="top" id="2LR-Cj-oPd"/>
+                            <constraint firstItem="kjd-Xk-iNy" firstAttribute="bottom" secondItem="eRm-9S-Bfh" secondAttribute="bottom" id="OtG-6X-ktc"/>
                             <constraint firstAttribute="bottom" secondItem="FaF-pj-mZ1" secondAttribute="bottom" id="XGy-CS-PkJ"/>
+                            <constraint firstAttribute="trailing" secondItem="kjd-Xk-iNy" secondAttribute="trailing" id="nHn-VS-9W7"/>
                             <constraint firstItem="eRm-9S-Bfh" firstAttribute="top" secondItem="Rfp-CV-QQi" secondAttribute="top" id="qGa-ec-lfV"/>
                             <constraint firstItem="eRm-9S-Bfh" firstAttribute="leading" secondItem="Rfp-CV-QQi" secondAttribute="leading" id="qnN-Ms-x2g"/>
                             <constraint firstItem="FaF-pj-mZ1" firstAttribute="leading" secondItem="63v-8o-blB" secondAttribute="leading" id="s4z-Rp-KgS"/>
@@ -267,6 +274,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="6M1-Kt-MaA"/>
                     <connections>
+                        <outlet property="progressView" destination="kjd-Xk-iNy" id="Fsd-xW-Czy"/>
                         <outlet property="webView" destination="FaF-pj-mZ1" id="s8j-Sh-c3N"/>
                     </connections>
                 </viewController>
@@ -372,8 +380,5 @@
         <namedColor name="YP White">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>
