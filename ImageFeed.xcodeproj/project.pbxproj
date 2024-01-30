@@ -103,6 +103,7 @@
 			children = (
 				E9A507F22B18D2EB0009D5B5 /* AppDelegate.swift */,
 				E9A507F42B18D2EB0009D5B5 /* SceneDelegate.swift */,
+				E9A0C3462B598BDE001AEF1D /* Constants.swift */,
 				E9B0CEA72B6931010073168C /* ServiceAccessLayer */,
 				E9B0CEAD2B695CD20073168C /* SplashViewController */,
 				E9E196FE2B5F286D00E666AA /* Auth */,
@@ -114,7 +115,6 @@
 				E9A507FD2B18D2ED0009D5B5 /* LaunchScreen.storyboard */,
 				E9A508002B18D2ED0009D5B5 /* Info.plist */,
 				E9A507FB2B18D2ED0009D5B5 /* Assets.xcassets */,
-				E9A0C3462B598BDE001AEF1D /* Constants.swift */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";

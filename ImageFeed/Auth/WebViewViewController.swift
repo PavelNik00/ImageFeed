@@ -14,7 +14,7 @@ final class WebViewViewController: UIViewController {
     
     @IBOutlet private var webView: WKWebView!
     
-    @IBOutlet var progressView: UIProgressView!
+    @IBOutlet private var progressView: UIProgressView!
     
     weak var delegate: WebViewViewControllerDelegate?
     
