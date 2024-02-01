@@ -169,6 +169,8 @@
 			dependencies = (
 			);
 			name = ImageFeed;
+			packageProductDependencies = (
+			);
 			productName = ImageFeed;
 			productReference = E9A507EF2B18D2EB0009D5B5 /* ImageFeed.app */;
 			productType = "com.apple.product-type.application";
@@ -197,6 +199,8 @@
 				Base,
 			);
 			mainGroup = E9A507E62B18D2EB0009D5B5;
+			packageReferences = (
+			);
 			productRefGroup = E9A507F02B18D2EB0009D5B5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
