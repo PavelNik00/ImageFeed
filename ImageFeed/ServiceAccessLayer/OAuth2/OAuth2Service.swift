@@ -8,17 +8,23 @@
 import Foundation
 
 final class OAuth2Service {
+    // MARK: - Properties
     static let shared = OAuth2Service()
+    
+    // MARK: - Private Properties
     private let urlSession = URLSession.shared
+    private let tokenStorage = OAuth2TokenStorage()
+    
     private (set) var authToken: String? {
         get {
-            return OAuth2TokenStorage().token
+            return tokenStorage.token
         }
         set {
-            OAuth2TokenStorage().token = newValue
+            tokenStorage.token = newValue
         }
     }
     
+    // MARK: - Func
     func fetchOAuthToken(
         _ code: String,
         completion: @escaping (Swift.Result<String, Error>) -> Void
@@ -39,14 +45,19 @@ final class OAuth2Service {
         }
         task.resume()
     }
+    
+    private init() { }
 }
 
+// MARK: - Extensions
 extension OAuth2Service {
     private func object(
         for request: URLRequest,
         completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void
     ) -> URLSessionTask {
         let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
         return urlSession.data(for: request) { (result: Result<Data, Error>) in
             let response = result.flatMap { data -> Result<OAuthTokenResponseBody, Error> in
                 Result { try decoder.decode(OAuthTokenResponseBody.self, from: data) }
@@ -58,9 +69,9 @@ extension OAuth2Service {
     private func authTokenRequest(code: String) -> URLRequest {
         URLRequest.makeHTTPRequest(
             path: "/oauth/token"
-            + "?client_id=\(AccessKey)"
-            + "&&client_secret=\(SecretKey)"
-            + "&&redirect_uri=\(RedirectURI)"
+            + "?client_id=\(accessKey)"
+            + "&&client_secret=\(secretKey)"
+            + "&&redirect_uri=\(redirectURI)"
             + "&&code=\(code)"
             + "&&grant_type=authorization_code",
             httpMethod: "POST",
@@ -73,22 +84,15 @@ extension OAuth2Service {
         let tokenType: String
         let scope: String
         let createdAt: Int?
-        
-        enum CodingKeys: String, CodingKey {
-            case accessToken = "access_token"
-            case tokenType = "token_type"
-            case scope = "scope"
-            case createdAt = "created_at"
-        }
     }
 }
-// MARK: - HTTP Request
 
+// MARK: - HTTP Request
 extension URLRequest {
     static func makeHTTPRequest(
         path: String,
         httpMethod: String,
-        baseURL: URL = DefaultBaseURL
+        baseURL: URL = defaultBaseURL
     ) -> URLRequest {
         var request = URLRequest(url: URL(string: path, relativeTo: baseURL)!)
         request.httpMethod = httpMethod
@@ -97,7 +101,6 @@ extension URLRequest {
 }
 
 // MARK: - Network Connection
-
 enum NetworkError: Error {
     case httpStatusCode(Int)
     case urlRequestError(Error)

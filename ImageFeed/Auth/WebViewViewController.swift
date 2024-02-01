@@ -8,38 +8,50 @@
 import UIKit
 import WebKit
 
-fileprivate let UnsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+
+protocol WebViewViewControllerDelegate: AnyObject {
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController)
+}
 
 final class WebViewViewController: UIViewController {
-    
-    @IBOutlet private var webView: WKWebView!
-    
-    @IBOutlet private var progressView: UIProgressView!
-    
+    // MARK: - Properties
     weak var delegate: WebViewViewControllerDelegate?
     
+    // MARK: - IB Outlets
+    @IBOutlet private var webView: WKWebView!
+    @IBOutlet private var progressView: UIProgressView!
+    
+    // MARK: - Private Properties
+    fileprivate let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+    
+    // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
         
         webView.navigationDelegate = self
         
-        var urlComponents = URLComponents(string: UnsplashAuthorizeURLString)!
+        guard var urlComponents = URLComponents(string: unsplashAuthorizeURLString) else {
+            print("Error: Unable to create URLComponents from string")
+            return
+        }
+        
         urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: "AccessKey"),
-            URLQueryItem(name: "redirect_uri", value: RedirectURI),
+            URLQueryItem(name: "client_id", value: accessKey),
+            URLQueryItem(name: "redirect_uri", value: redirectURI),
             URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: AccessScope)
+            URLQueryItem(name: "scope", value: accessScope)
         ]
-        let url = urlComponents.url!
+        
+        guard let url = urlComponents.url else {
+            print("Error: Unable to create URL from URLComponents")
+            return
+        }
         
         let request = URLRequest(url: url)
         webView.load(request)
         
         updateProgress()
-    }
-    
-    @IBAction func didTapButton(_ sender: Any?) {
-        delegate?.webViewViewControllerDidCancel(self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -57,6 +69,7 @@ final class WebViewViewController: UIViewController {
         webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
     }
     
+    // MARK: - Func
     override func observeValue(
         forKeyPath keyPath: String?,
         of object: Any?,
@@ -69,13 +82,20 @@ final class WebViewViewController: UIViewController {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
     }
-
+    
+    // MARK: - Private Func
     private func updateProgress() {
-        progressView.progress = Float(webView.estimatedProgress)
+        progressView.setProgress(Float(webView.estimatedProgress), animated: true)
         progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
+    }
+    
+    // MARK: - IB Action
+    @IBAction private func didTapBackButton() {
+        delegate?.webViewViewControllerDidCancel(self)
     }
 }
 
+// MARK: - Extension
 extension WebViewViewController: WKNavigationDelegate {
     func webView(
         _ webView: WKWebView,
@@ -105,7 +125,3 @@ extension WebViewViewController: WKNavigationDelegate {
     }
 }
 
-protocol WebViewViewControllerDelegate: AnyObject {
-    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
-    func webViewViewControllerDidCancel(_ vc: WebViewViewController)
-}

@@ -1,11 +1,13 @@
 import UIKit
 
 final class ImagesListViewController: UIViewController {
-    private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    
+    // MARK: - IB Outlets
     @IBOutlet private var tableView: UITableView!
     
-    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
+    // MARK: - Public Properties
+    private let showSingleImageSegueIdentifier = "ShowSingleImage"
+    
+    private let photosName: [String] = Array(0..<20).map { "\($0)" }
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -14,21 +16,26 @@ final class ImagesListViewController: UIViewController {
         return formatter
     }()
     
+    // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == showSingleImageSegueIdentifier,
-              let viewController = segue.destination as? SingleImageViewController,
-              let indexPath = sender as? IndexPath  else {
+        if segue.identifier == showSingleImageSegueIdentifier {
+            let viewController = segue.destination as! SingleImageViewController
+            let indexPath = sender as! IndexPath
+            let imageName = photosName[indexPath.row]
+            let image = UIImage(named: "\(imageName)_full_size") ?? UIImage(named: imageName)
+            viewController.image = image
+        } else {
             super.prepare(for: segue, sender: sender)
-            return
         }
     }
 }
 
+// MARK: - UITableViewDelegate
 extension ImagesListViewController {
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let image = UIImage(named: photosName[indexPath.row]) else {
@@ -45,6 +52,7 @@ extension ImagesListViewController {
     }
 }
 
+// MARK: - UITableViewDataSource
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return photosName.count
@@ -64,10 +72,11 @@ extension ImagesListViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
-        }
+        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let image = UIImage(named: photosName[indexPath.row]) else {
