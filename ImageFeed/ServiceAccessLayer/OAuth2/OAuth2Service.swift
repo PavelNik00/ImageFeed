@@ -13,6 +13,10 @@ final class OAuth2Service {
     
     // MARK: - Private Properties
     private let urlSession = URLSession.shared
+    
+    private var task: URLSessionTask?
+    private var lastCode: String?
+    
     private let tokenStorage = OAuth2TokenStorage()
     
     private (set) var authToken: String? {
@@ -29,6 +33,19 @@ final class OAuth2Service {
         _ code: String,
         completion: @escaping (Swift.Result<String, Error>) -> Void
     ) {
+        assert(Thread.isMainThread)
+        if task != nil {
+            if lastCode != code {
+                task?.cancel()
+            } else {
+                return
+            }
+        } else {
+            if lastCode == code {
+                return
+            }
+        }
+        lastCode = code
         let request = authTokenRequest(code: code)
         let task = object(for: request) { [weak self] result in
             guard let self = self else { return }
@@ -39,11 +56,24 @@ final class OAuth2Service {
                     self.authToken = authToken
                     completion(.success(authToken))
                 case .failure(let error):
-                    completion(.failure(error))
+//                    completion(.failure(error))
+                    self.lastCode = nil
                 }
+                self.task = nil
+//                if result != nil {
+//                    self.lastCode = nil
+//                }
             }
         }
+        self.task = task
         task.resume()
+    }
+    
+    private func makeRequest(code: String) -> URLRequest {
+        guard let url = URL(string: "...\(code)") else { fatalError("Failed to create URL") }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        return request
     }
     
     private init() { }
