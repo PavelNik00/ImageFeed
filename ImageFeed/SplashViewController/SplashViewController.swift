@@ -62,12 +62,13 @@ extension SplashViewController {
 
 extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
-        ProgressHUD.animate()
-        ProgressHUD.animationType = .squareCircuitSnake
-        ProgressHUD.colorAnimation = .systemBlue
-        ProgressHUD.colorProgress = .systemBlue
-        ProgressHUD.colorBackground = .ypBlack
-        ProgressHUD.colorHUD = .ypBlack
+        UIBlockingProgressHUD.show()
+//        ProgressHUD.animate()
+//        ProgressHUD.animationType = .squareCircuitSnake
+//        ProgressHUD.colorAnimation = .systemBlue
+//        ProgressHUD.colorProgress = .systemBlue
+//        ProgressHUD.colorBackground = .ypBlack
+//        ProgressHUD.colorHUD = .ypBlack
         dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
             self.fetchOAuthToken(code)
@@ -80,9 +81,9 @@ extension SplashViewController: AuthViewControllerDelegate {
             switch result {
             case .success:
                 self.switchToTabBarController()
-                ProgressHUD.dismiss()
+                UIBlockingProgressHUD.dismiss()
             case .failure:
-                ProgressHUD.dismiss()
+                UIBlockingProgressHUD.dismiss()
                 // TODO [Sprint 11]
                 break
             }
