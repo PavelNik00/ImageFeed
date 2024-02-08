@@ -15,6 +15,8 @@ final class ProfileViewController: UIViewController {
     private let descriptionLabel = UILabel()
     private let logoutButton = UIButton(type: .custom)
     
+    private let profileService = ProfileService.shared
+    
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,9 +28,19 @@ final class ProfileViewController: UIViewController {
         setupLoginNameLabel()
         setupDescriptionLabel()
         setupLogoutButton()
+        
+        updateProfileDetails(profile: profileService.profile)
     }
     
     // MARK: - Private Func
+    
+    private func updateProfileDetails(profile: Profile?) {
+        guard let profile = profile else { return }
+        nameLabel.text = profile.name
+        loginNameLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
+    }
+    
     private func setupProfileImage() {
         profileImage.translatesAutoresizingMaskIntoConstraints = false
         profileImage.heightAnchor.constraint(equalToConstant: 70).isActive = true
