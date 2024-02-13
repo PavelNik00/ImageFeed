@@ -17,20 +17,6 @@ final class ProfileService {
     private(set) var profile: Profile?
     private init() {}
     
-//    struct ProfileResult: Codable {
-//        let userName: String
-//        let firstName: String
-//        let lastName: String
-//        let bio: String
-//    }
-//    
-//    struct Profile {
-//        let username: String
-//        let name: String
-//        let loginName: String
-//        let bio: String
-//    }
-    
     // MARK: - Public Methods
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         assert(Thread.isMainThread)

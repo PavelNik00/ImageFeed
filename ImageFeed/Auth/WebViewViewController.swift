@@ -23,6 +23,8 @@ final class WebViewViewController: UIViewController {
     @IBOutlet private var progressView: UIProgressView!
     
     // MARK: - Private Properties
+    private var estimatedProgressObservation: NSKeyValueObservation?
+    
     fileprivate let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
     
     // MARK: - View Life Cycles
@@ -30,6 +32,14 @@ final class WebViewViewController: UIViewController {
         super.viewDidLoad()
         
         webView.navigationDelegate = self
+        
+        estimatedProgressObservation = webView.observe(
+            \.estimatedProgress,
+             options: [],
+             changeHandler: { [weak self] _, _ in
+                 guard let self = self else { return }
+                 self.updateProgress()
+             })
         
         guard var urlComponents = URLComponents(string: unsplashAuthorizeURLString) else {
             print("Error: Unable to create URLComponents from string")

@@ -22,10 +22,6 @@ final class ProfileImageService {
     private let oauth2TokenStorage = OAuth2TokenStorage.shared
     private init() {}
     
-    struct UserResult: Codable {
-        
-    }
-    
     // MARK: - Public Methods
     func fetchProfileImageURL(
         username: String,

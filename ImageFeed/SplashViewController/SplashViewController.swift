@@ -23,7 +23,17 @@ final class SplashViewController: UIViewController {
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     
-    // MARK: - Func
+    private let mainID = "Main"
+    private let authViewControllerID = "AuthViewController"
+    private var alertPresenter: AlertPresenterProtocol?
+    
+    // MARK: - View Life Cycles
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        alertPresenter = AlertPresenter(delegate: self)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -64,6 +74,19 @@ extension SplashViewController {
 }
 
 extension SplashViewController: AuthViewControllerDelegate {
+    private func switchToAuthViewController() {
+        let storyboard = UIStoryboard(name: mainID, bundle: .main).instantiateViewController(
+            identifier: authViewControllerID
+        )
+        guard let authViewController = storyboard as? AuthViewController else {
+            assertionFailure("Failed to show Authentication Screen")
+            return
+        }
+        authViewController.delegate = self
+        authViewController.modalPresentationStyle = .fullScreen
+        present(authViewController, animated: true)
+    }
+    
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
         UIBlockingProgressHUD.show()
         dismiss(animated: true) { [weak self] in
@@ -101,10 +124,27 @@ extension SplashViewController: AuthViewControllerDelegate {
 //                    self.showToTabBarController()
 //                }
             case .failure:
-                return
-//                self.showNetworkError()
+                self.showNetworkError()
             }
             UIBlockingProgressHUD.dismiss()
         }
+    }
+}
+
+// MARK: - AlertPresenter
+
+extension SplashViewController {
+    private func showNetworkError() {
+        let alert = AlertModel(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            buttonText: "ОК",
+            completion: { [weak self] in
+                guard self != nil else {
+                    return
+                }
+                self?.switchToAuthViewController()
+            })
+        alertPresenter?.showError(for: alert)
     }
 }
