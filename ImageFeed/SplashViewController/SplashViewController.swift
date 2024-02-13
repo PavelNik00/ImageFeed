@@ -20,7 +20,8 @@ final class SplashViewController: UIViewController {
     private let oauth2Service = OAuth2Service.shared
     private let oauth2TokenStorage = OAuth2TokenStorage()
     
-//    private let profileService = ProfileService.shared
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     
     // MARK: - Func
     override func viewDidAppear(_ animated: Bool) {
@@ -88,18 +89,22 @@ extension SplashViewController: AuthViewControllerDelegate {
         }
     }
     
-//    private func fetchProfile(token: String) {
-//        profileService.fetchProfile { [weak self] result in
-//            guard let self = self else { return }
-//            switch result {
-//            case .success:
-//                UIBlockingProgressHUD.dismiss()
-//                self.switchToTabBarController()
-//            case .failure:
-//                UIBlockingProgressHUD.dismiss()
-//                // TODO [Sprint 11] Показать ошибку
-//                break
-//            }
-//        }
-//    }
+    
+    private func fetchProfile(token: String) {
+        profileService.fetchProfile(token) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success:
+                guard let username = self.profileService.profile?.userName else { return }
+                self.profileImageService.fetchProfileImageURL(username: username)  { _ in }
+//                DispatchQueue.main.async {
+//                    self.showToTabBarController()
+//                }
+            case .failure:
+                return
+//                self.showNetworkError()
+            }
+            UIBlockingProgressHUD.dismiss()
+        }
+    }
 }

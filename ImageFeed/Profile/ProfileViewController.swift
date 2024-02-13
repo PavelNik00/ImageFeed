@@ -16,6 +16,7 @@ final class ProfileViewController: UIViewController {
     private let logoutButton = UIButton(type: .custom)
     
     private let profileService = ProfileService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - View Life Cycles
     override func viewDidLoad() {
@@ -39,6 +40,16 @@ final class ProfileViewController: UIViewController {
         nameLabel.text = profile.name
         loginNameLabel.text = profile.loginName
         descriptionLabel.text = profile.bio
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            self.updateAvatar()
+        }
+        updateAvatar()
     }
     
     private func setupProfileImage() {
@@ -99,4 +110,16 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - IB Action
     @IBAction private func didTapLogoutButton() {}
+}
+
+private extension ProfileViewController {
+    private func updateAvatar() {                                   // 8
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarUrl,
+            let url = URL(string: profileImageURL)
+        else { return }
+        // TODO [Sprint 11] Обновить аватар, используя Kingfisher
+    }
+    
+    // ...
 }
