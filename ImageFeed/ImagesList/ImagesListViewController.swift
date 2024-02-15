@@ -37,7 +37,7 @@ final class ImagesListViewController: UIViewController {
     }
 }
 
-// MARK: - UITableViewDelegate
+// MARK: - Extension
 extension ImagesListViewController {
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let image = UIImage(named: photosName[indexPath.row]) else {

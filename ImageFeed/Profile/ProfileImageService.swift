@@ -58,7 +58,7 @@ final class ProfileImageService {
 private extension ProfileImageService {
     private func profileImageRequest(token: String, username: String) -> URLRequest {
         guard let url = URL(
-            string: "\(Constants.baseURLString)" + "/users/" + username)
+            string: "\(Constants.defaultBaseURL)" + "/users/" + username)
         else {
             fatalError("Failed to create URL")
         }

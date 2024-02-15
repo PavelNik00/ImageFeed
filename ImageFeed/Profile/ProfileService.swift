@@ -36,7 +36,6 @@ final class ProfileService {
                     self.task = nil
                 case .failure(let error):
                     completion(.failure(error))
-                    
                 }
             }
         self.task = task
@@ -48,7 +47,7 @@ final class ProfileService {
 private extension ProfileService {
     func profileRequest(token: String) -> URLRequest {
         guard let url = URL(
-            string: "\(Constants.baseURLString)"
+            string: "\(Constants.defaultBaseURL)"
             + "/me")
         else {
             fatalError("Failed to create URL")

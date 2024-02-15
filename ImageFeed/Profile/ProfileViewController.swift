@@ -9,7 +9,9 @@ import UIKit
 import Kingfisher
 
 final class ProfileViewController: UIViewController {
+    
     // MARK: - Private Properties
+    
     private let profileImage = UIImageView(image: UIImage(named: "avatar"))
     private let nameLabel = UILabel()
     private let loginNameLabel = UILabel()
@@ -17,9 +19,11 @@ final class ProfileViewController: UIViewController {
     private let logoutButton = UIButton(type: .custom)
     
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - View Life Cycles
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -116,7 +120,7 @@ final class ProfileViewController: UIViewController {
 private extension ProfileViewController {
     private func updateAvatar() {
         guard
-            let profileImageURL = ProfileImageService.shared.avatarUrl,
+            let profileImageURL = profileImageService.avatarUrl,
             let url = URL(string: profileImageURL) else { return }
         
         let cache = ImageCache.default
@@ -125,8 +129,12 @@ private extension ProfileViewController {
         
         let processor = RoundCornerImageProcessor(cornerRadius: 61)
         profileImage.kf.indicatorType = .activity
-        profileImage.kf.setImage(with: url,
-                                 placeholder: UIImage(named: "placeholder.jpeg"), options: [.processor(processor)]) { result in
+        profileImage.kf.setImage(
+            with: url,
+            placeholder: UIImage(named: "placeholder.jpeg"),
+            options: [.processor(processor)]
+        ) {
+            result in
             switch result {
             case .success(let value):
                 print(value.image)

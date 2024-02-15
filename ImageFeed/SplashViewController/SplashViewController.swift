@@ -19,8 +19,7 @@ final class SplashViewController: UIViewController {
     private let splashScreenLogo = UIImageView(image: UIImage(named: "splash_screen_logo"))
     
     private let oauth2Service = OAuth2Service.shared
-    private let oauth2TokenStorage = OAuth2TokenStorage()
-    
+    private let oauth2TokenStorage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     
@@ -34,16 +33,15 @@ final class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        updateSplashScreenLogo()
-        
         alertPresenter = AlertPresenter(delegate: self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if let token = oauth2TokenStorage.token {
-            switchToTabBarController()
+        if oauth2TokenStorage.token != nil {
+            guard let token = oauth2TokenStorage.token else { return }
+            fetchProfile(token: token)
         } else {
             switchToAuthViewController()
         }
@@ -67,8 +65,8 @@ final class SplashViewController: UIViewController {
         splashScreenLogo.translatesAutoresizingMaskIntoConstraints = false
         splashScreenLogo.heightAnchor.constraint(equalToConstant: 77).isActive = true
         splashScreenLogo.widthAnchor.constraint(equalToConstant: 75).isActive = true
-//        splashScreenLogo.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-//        splashScreenLogo.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        splashScreenLogo.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        splashScreenLogo.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         view.addSubview(splashScreenLogo)
     }
 }
@@ -106,12 +104,11 @@ extension SplashViewController: AuthViewControllerDelegate {
                 self.oauth2TokenStorage.token = token
                 self.fetchProfile(token: token)
                 self.switchToTabBarController()
-                UIBlockingProgressHUD.dismiss()
             case .failure:
-                UIBlockingProgressHUD.dismiss()
                 self.showNetworkError()
                 break
             }
+            UIBlockingProgressHUD.dismiss()
         }
     }
     

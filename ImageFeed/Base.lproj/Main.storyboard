@@ -193,7 +193,7 @@
         <!--Navigation Controller-->
         <scene sceneID="cCm-mx-jqn">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="EsL-98-Ula" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NavigationViewController" automaticallyAdjustsScrollViewInsets="NO" id="EsL-98-Ula" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="CTi-wC-Lpa">
                         <rect key="frame" x="0.0" y="48" width="414" height="44"/>

@@ -16,8 +16,6 @@ enum Constants {
     // MARK: Unsplash api base paths
     static let accessScope = "public+read_user+write_likes"
     static let defaultBaseURL = URL(string: "https://api.unsplash.com/")!
-    static let baseURLString = "https://unsplash.com"
-    
     
     // MARK: Storage contants
     static let bearerToken = "bearerToken"

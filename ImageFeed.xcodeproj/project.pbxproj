@@ -118,6 +118,14 @@
 			path = SingleImageView;
 			sourceTree = "<group>";
 		};
+		E9A3F4FD2B7E49AA0048B4BF /* TabBarController */ = {
+			isa = PBXGroup;
+			children = (
+				E9A3F4FB2B7D55940048B4BF /* TabBarController.swift */,
+			);
+			path = TabBarController;
+			sourceTree = "<group>";
+		};
 		E9A507E62B18D2EB0009D5B5 = {
 			isa = PBXGroup;
 			children = (
@@ -139,8 +147,7 @@
 			children = (
 				E9A507F22B18D2EB0009D5B5 /* AppDelegate.swift */,
 				E9A507F42B18D2EB0009D5B5 /* SceneDelegate.swift */,
-				E9A0C3462B598BDE001AEF1D /* Constants.swift */,
-				E9A3F4FB2B7D55940048B4BF /* TabBarController.swift */,
+				E9A3F4FD2B7E49AA0048B4BF /* TabBarController */,
 				E9DAA10E2B7BF89000A018ED /* Alert */,
 				E9DAA1022B75517C00A018ED /* Services */,
 				E9DAA0FB2B754EE700A018ED /* Models */,
@@ -200,6 +207,7 @@
 		E9DAA1022B75517C00A018ED /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				E9A0C3462B598BDE001AEF1D /* Constants.swift */,
 				E9DAA1002B75515000A018ED /* URLRequestExtension.swift */,
 				E9DAA0F42B74185500A018ED /* URLSession+Extension.swift */,
 				E9DAA0EF2B72A38000A018ED /* UIBlockingProgressHUD.swift */,

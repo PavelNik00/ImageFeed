@@ -8,7 +8,9 @@
 import UIKit
 
 final class SingleImageViewController: UIViewController {
+    
     // MARK: - Public Properties
+    
     var image: UIImage! {
         didSet {
             guard isViewLoaded else { return }
@@ -18,11 +20,13 @@ final class SingleImageViewController: UIViewController {
     }
     
     // MARK: - IBOutlets
-    @IBOutlet weak var scrollView: UIScrollView!
+    
+    @IBOutlet private weak var scrollView: UIScrollView!
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private weak var sharedButton: UIButton!
     
     // MARK: - View Life Cycles
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         scrollView.minimumZoomScale = 0.1
@@ -32,6 +36,7 @@ final class SingleImageViewController: UIViewController {
     }
     
     // MARK: - Private func
+    
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
@@ -56,7 +61,7 @@ final class SingleImageViewController: UIViewController {
     
     @IBAction func didTapShareButton(_ sender: Any) {
         let share = UIActivityViewController(
-            activityItems: [image],
+            activityItems: [image as Any],
             applicationActivities: nil
         )
         present(share, animated: true, completion: nil)

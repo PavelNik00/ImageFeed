@@ -8,7 +8,6 @@
 import UIKit
 import WebKit
 
-
 protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
@@ -24,6 +23,7 @@ final class WebViewViewController: UIViewController {
     
     // MARK: - Private Properties
     private var estimatedProgressObservation: NSKeyValueObservation?
+    private var alertPresenter: AlertPresenterProtocol?
     
     fileprivate let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
     
@@ -76,7 +76,11 @@ final class WebViewViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
+        webView.removeObserver(
+            self,
+            forKeyPath: #keyPath(WKWebView.estimatedProgress),
+            context: nil
+        )
     }
     
     // MARK: - Func
@@ -91,6 +95,15 @@ final class WebViewViewController: UIViewController {
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
+    }
+    
+    // MARK: - Public Methods
+    func webView(
+        _ webView: WKWebView,
+        didFailProvisionalNavigation navigation: WKNavigation!,
+        withError error: Error
+    ) {
+        showNetworkError()
     }
     
     // MARK: - Private Func
@@ -135,3 +148,18 @@ extension WebViewViewController: WKNavigationDelegate {
     }
 }
 
+//MARK: - AlertPresenter
+extension WebViewViewController {
+    private func showNetworkError() {
+        let alert = AlertModel(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            buttonText: "Ок"
+            ) { [weak self] in
+                guard let self else { return }
+                dismiss(animated: true)
+            }
+        alertPresenter = AlertPresenter(delegate: self)
+        alertPresenter?.showError(for: alert)
+    }
+}
