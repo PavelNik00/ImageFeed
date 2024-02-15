@@ -140,6 +140,7 @@
 				E9A507F22B18D2EB0009D5B5 /* AppDelegate.swift */,
 				E9A507F42B18D2EB0009D5B5 /* SceneDelegate.swift */,
 				E9A0C3462B598BDE001AEF1D /* Constants.swift */,
+				E9A3F4FB2B7D55940048B4BF /* TabBarController.swift */,
 				E9DAA10E2B7BF89000A018ED /* Alert */,
 				E9DAA1022B75517C00A018ED /* Services */,
 				E9DAA0FB2B754EE700A018ED /* Models */,
@@ -154,7 +155,6 @@
 				E9A507FD2B18D2ED0009D5B5 /* LaunchScreen.storyboard */,
 				E9A508002B18D2ED0009D5B5 /* Info.plist */,
 				E9A507FB2B18D2ED0009D5B5 /* Assets.xcassets */,
-				E9A3F4FB2B7D55940048B4BF /* TabBarController.swift */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";
