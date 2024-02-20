@@ -23,6 +23,7 @@ final class ProfileService {
         assert(Thread.isMainThread)
         if profile != nil { return }
         task?.cancel()
+        
         let request = profileRequest(token: token)
         let task = urlSession.objectTask(for: request) { [weak self] (
             result: Result<ProfileResult,Error>

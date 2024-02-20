@@ -30,6 +30,7 @@ final class ProfileImageService {
         assert(Thread.isMainThread)
         if avatarUrl != nil { return }
         task?.cancel()
+        
         guard let token = oauth2TokenStorage.token else { return }
         let request = profileImageRequest(token: token, username: username)
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in

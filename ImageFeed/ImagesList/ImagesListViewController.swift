@@ -9,6 +9,8 @@ final class ImagesListViewController: UIViewController {
     
     private let photosName: [String] = Array(0..<20).map { "\($0)" }
     
+    private let imagesListService = ImagesListService.shared
+    
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
@@ -78,6 +80,21 @@ extension ImagesListViewController: UITableViewDataSource {
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row + 1 == imagesListService.photos.count {
+            imagesListService.fetchPhotosNextPage { result in
+                switch result {
+                case .success(let photos):
+                    print("Получено \(self.imagesListService.photos.count) новых фотографий")
+                case .failure(let error):
+                    print("Ошибка при загрузке фотографий: \(error)")
+                }
+            }
+        } else {
+            return
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
