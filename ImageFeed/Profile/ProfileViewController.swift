@@ -59,6 +59,7 @@ final class ProfileViewController: UIViewController {
     
     private func setupProfileImage() {
         profileImage.translatesAutoresizingMaskIntoConstraints = false
+        profileImage.layer.cornerRadius = 35
         profileImage.heightAnchor.constraint(equalToConstant: 70).isActive = true
         profileImage.widthAnchor.constraint(equalToConstant: 70).isActive = true
         profileImage.layer.cornerRadius = profileImage.frame.size.width / 2
@@ -131,7 +132,7 @@ private extension ProfileViewController {
         profileImage.kf.indicatorType = .activity
         profileImage.kf.setImage(
             with: url,
-            placeholder: UIImage(named: "placeholder.jpeg"),
+            placeholder: UIImage(named: "placeholder"),
             options: [.processor(processor)]
         ) {
             result in
