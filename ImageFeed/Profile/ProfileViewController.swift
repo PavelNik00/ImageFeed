@@ -6,16 +6,24 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
+    
     // MARK: - Private Properties
+    
     private let profileImage = UIImageView(image: UIImage(named: "avatar"))
     private let nameLabel = UILabel()
     private let loginNameLabel = UILabel()
     private let descriptionLabel = UILabel()
     private let logoutButton = UIButton(type: .custom)
     
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     // MARK: - View Life Cycles
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -26,11 +34,32 @@ final class ProfileViewController: UIViewController {
         setupLoginNameLabel()
         setupDescriptionLabel()
         setupLogoutButton()
+        
+        updateProfileDetails(profile: profileService.profile)
     }
     
     // MARK: - Private Func
+    
+    private func updateProfileDetails(profile: Profile?) {
+        guard let profile = profile else { return }
+        nameLabel.text = profile.name
+        loginNameLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            self.updateAvatar()
+        }
+        updateAvatar()
+    }
+    
     private func setupProfileImage() {
         profileImage.translatesAutoresizingMaskIntoConstraints = false
+        profileImage.layer.cornerRadius = 35
         profileImage.heightAnchor.constraint(equalToConstant: 70).isActive = true
         profileImage.widthAnchor.constraint(equalToConstant: 70).isActive = true
         profileImage.layer.cornerRadius = profileImage.frame.size.width / 2
@@ -87,4 +116,32 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - IB Action
     @IBAction private func didTapLogoutButton() {}
+}
+
+private extension ProfileViewController {
+    private func updateAvatar() {
+        guard
+            let profileImageURL = profileImageService.avatarUrl,
+            let url = URL(string: profileImageURL) else { return }
+        
+        let cache = ImageCache.default
+        cache.clearMemoryCache()
+        cache.clearDiskCache()
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 61)
+        profileImage.kf.indicatorType = .activity
+        profileImage.kf.setImage(
+            with: url,
+            placeholder: UIImage(named: "placeholder"),
+            options: [.processor(processor)]
+        ) {
+            result in
+            switch result {
+            case .success(let value):
+                print(value.image)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
 }

@@ -8,7 +8,6 @@
 import UIKit
 import WebKit
 
-
 protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
@@ -23,6 +22,9 @@ final class WebViewViewController: UIViewController {
     @IBOutlet private var progressView: UIProgressView!
     
     // MARK: - Private Properties
+    private var estimatedProgressObservation: NSKeyValueObservation?
+    private var alertPresenter: AlertPresenterProtocol?
+    
     fileprivate let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
     
     // MARK: - View Life Cycles
@@ -31,16 +33,24 @@ final class WebViewViewController: UIViewController {
         
         webView.navigationDelegate = self
         
+        estimatedProgressObservation = webView.observe(
+            \.estimatedProgress,
+             options: [],
+             changeHandler: { [weak self] _, _ in
+                 guard let self = self else { return }
+                 self.updateProgress()
+             })
+        
         guard var urlComponents = URLComponents(string: unsplashAuthorizeURLString) else {
             print("Error: Unable to create URLComponents from string")
             return
         }
         
         urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: accessKey),
-            URLQueryItem(name: "redirect_uri", value: redirectURI),
+            URLQueryItem(name: "client_id", value: Constants.accessKey),
+            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
             URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: accessScope)
+            URLQueryItem(name: "scope", value: Constants.accessScope)
         ]
         
         guard let url = urlComponents.url else {
@@ -66,7 +76,11 @@ final class WebViewViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
+        webView.removeObserver(
+            self,
+            forKeyPath: #keyPath(WKWebView.estimatedProgress),
+            context: nil
+        )
     }
     
     // MARK: - Func
@@ -81,6 +95,15 @@ final class WebViewViewController: UIViewController {
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
+    }
+    
+    // MARK: - Public Methods
+    func webView(
+        _ webView: WKWebView,
+        didFailProvisionalNavigation navigation: WKNavigation!,
+        withError error: Error
+    ) {
+        showNetworkError()
     }
     
     // MARK: - Private Func
@@ -125,3 +148,18 @@ extension WebViewViewController: WKNavigationDelegate {
     }
 }
 
+//MARK: - AlertPresenter
+extension WebViewViewController {
+    private func showNetworkError() {
+        let alert = AlertModel(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            buttonText: "Ок"
+            ) { [weak self] in
+                guard let self else { return }
+                dismiss(animated: true)
+            }
+        alertPresenter = AlertPresenter(delegate: self)
+        alertPresenter?.showError(for: alert)
+    }
+}
