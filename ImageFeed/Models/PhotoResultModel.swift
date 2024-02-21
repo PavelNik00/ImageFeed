@@ -25,7 +25,7 @@ struct PhotoResult: Codable {
     let width: Int
     let height: Int
     let isLikedByUser: Bool
-    let description: String
+    let description: String?
     let urls: UrlsResult
     
     // Определение ключей для декодирования

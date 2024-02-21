@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     
@@ -14,7 +15,6 @@ final class SingleImageViewController: UIViewController {
     var image: UIImage! {
         didSet {
             guard isViewLoaded else { return }
-            imageView.image = image
             rescaleAndCenterImageInScrollView(image: image ?? UIImage() )
         }
     }
@@ -31,6 +31,7 @@ final class SingleImageViewController: UIViewController {
         super.viewDidLoad()
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
+        
         imageView.image = image
         rescaleAndCenterImageInScrollView(image: image ?? UIImage())
     }

@@ -11,6 +11,7 @@ import Foundation
 final class ImagesListService {
     
     static let shared = ImagesListService()
+    
     internal init() {}
     // Массив для хранения загруженных фото
     private (set) var photos: [Photo] = []
