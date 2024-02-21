@@ -7,86 +7,116 @@
 
 import Foundation
 
+// Класс для обработки запросов к Unsplash API
 final class ImagesListService {
     
     static let shared = ImagesListService()
-    private init() {}
-    
+    internal init() {}
+    // Массив для хранения загруженных фото
     private (set) var photos: [Photo] = []
-    private var isFetching = false
-
+    // Форматтер для преобразования дат
+    private let dateFormatter = ISO8601DateFormatter()
+    // Номер последней загруженной страницы
     private var lastLoadedPage: Int?
+    // Объект для выполнения сетевых запросов
     private let urlSession = URLSession.shared
+    // Хранилище токена OAuth2
     private let oauth2TokenStorage = OAuth2TokenStorage.shared
+    // Текущая задача
+    private var task: URLSessionTask?
     
-    static let DidChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
+    // Статическое свойство для уведомления об изменении состояния
+    static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     
-    func fetchPhotosNextPage(completion: @escaping (Result<[Photo], Error>) -> Void) {
-        guard !isFetching else {
-            completion(.failure(NSError(domain: "ImagesListService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Already fetching"])))
-            return
-        }
+    // Метод для загрузки следующей странице фото
+    func fetchPhotosNextPage() {
+        // Проверка что метод вызывается из главного потока
+        assert(Thread.isMainThread)
+        // Проверка что не выполняется уже другая задача
+        if task != nil { return }
         
-        isFetching = true
-    
-        guard let token = oauth2TokenStorage.token else {
-            completion(.failure(NSError(domain: "ImagesListService", code: 401, userInfo: [NSLocalizedDescriptionKey: "Unauthorized"])))
-            return
-        }
-        
+        // Вычисление номера следующей страницы
         let nextPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
-        let request = nextPageRequest(token: token, page: nextPage)
+        // Обновление номера последней загруженной страницы
+        lastLoadedPage = nextPage
+
+        // Вызов расширения для выполнения запроса URL
+        let request = nextPageRequest(nextPage: nextPage)
         
-        let task = urlSession.dataTask(with: request) { [weak self] (data, response, error) in
-            guard let self = self else { return }
-            
-            defer {
-                self.isFetching = false
-            }
-            
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(NSError(domain: "ImagesListService", code: 500, userInfo: [NSLocalizedDescriptionKey: "No data received"])))
-                return
-            }
-            
-            do {
-                let newPhotos = try JSONDecoder().decode([Photo].self, from: data)
-                self.photos.append(contentsOf: newPhotos)
-                self.lastLoadedPage = nextPage
-                completion(.success(newPhotos))
-            } catch {
-                completion(.failure(error))
+        // Создание задачи для выполнения запроса
+        let task = urlSession.objectTask(for: request) { (result: Result<[PhotoResult], Error>) in
+            switch result {
+            case .success(let photoResultList):
+                
+                // Обработка успешного результата
+                for photoResult in photoResultList {
+                    
+                    // Преобразование данных из photoResult в photo
+                    let photoSize = CGSize(width: Double(photoResult.width),
+                                           height: Double(photoResult.height))
+                    
+                    var photoCreatedDate: Date?
+                    if let parsedDate = photoResult.createdAt {
+                        photoCreatedDate = self.dateFormatter.date(from: parsedDate)
+                    }
+                    
+                    let photo = Photo(
+                        id: photoResult.id,
+                        size: photoSize,
+                        createdAt: photoCreatedDate,
+                        welcomeDescription: photoResult.description,
+                        thumbImageURL: photoResult.urls.thumb,
+                        largeImageURL: photoResult.urls.full,
+                        isLiked: photoResult.isLikedByUser)
+                    
+                    // Добавление фото в массив
+                    self.photos.append(photo)
+                }
+                
+                // Отправка уведомлений об изменении состояния
+                NotificationCenter.default.post(
+                    name: ImagesListService.didChangeNotification,
+                    object: self)
+                
+                // Очистка текущей задачи
+                self.task = nil
+                
+            case .failure(let error):
+                // Обработка ошибки
+                print("Failed with error: \(error)")
+                // Очистка текущей задачи
+                self.task = nil
             }
         }
         
+        // Установка текущей задачи
+        self.task = task
+        // Запуск задачи
         task.resume()
     }
 }
 
-struct Photo: Codable {
-    let id: String
-    let size: CGSize
-    let createdAt: Date?
-    let welcomeDescription: String?
-    let thumbImageURL: String
-    let largeImageURL: String
-    let isLiked: Bool
-}
-
 // MARK: - Methods
 private extension ImagesListService {
-    func nextPageRequest(token: String, page: Int) -> URLRequest {
-        guard let url = URL(string: "\(Constants.defaultBaseImagesURL)/me?page=\(page)") else {
-            fatalError("Failed to create URL")
-        }
-
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    func nextPageRequest(nextPage: Int) -> URLRequest {
+        
+        // URL для запроса
+        let imageListURL = Constants.defaultBaseURL.absoluteString + "/photos"
+        var urlComponents = URLComponents(string: imageListURL)
+        urlComponents?.queryItems = [
+            URLQueryItem(name: "page", value: "\(nextPage)"),
+        ]
+        
+        // Построение конечного URL для запроса
+        guard let finalUrl = urlComponents?.url else { fatalError("Failed to create URL from components") }
+        // Создание запроса
+        var request = URLRequest(url: finalUrl)
+        request.httpMethod = "GET"
+        
+        // Получение токена и добавление его к заголовку
+        guard let bearerToken = oauth2TokenStorage.token else { fatalError("OAuth token is missing") }
+        // Установка заголовка с токеном
+        request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         return request
     }
 }

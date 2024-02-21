@@ -74,27 +74,24 @@ extension ImagesListViewController: UITableViewDataSource {
         
         return imageListCell
     }
+    
+    // Объявление метода делегата, который будет вызван перед отображением ячейки в таблице.
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        // Получаем общее количество строк в секции таблицы
+        let numberOfRows = tableView.numberOfRows(inSection: indexPath.section)
+        // Проверяем, является ли текущая ячейка последней в секции (Это обычно означает, что пользователь прокрутил таблицу до конца.)
+        if indexPath.row == numberOfRows - 1 {
+            // Если текущая ячейка последняя, вызываем метод fetchPhotosNextPage() у объекта imageListService. Этот метод загружает следующую порцию фотографий, когда пользователь достигает конца текущего списка.
+            imagesListService.fetchPhotosNextPage()
+        }
+    }
+    
 }
 
 // MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row + 1 == imagesListService.photos.count {
-            imagesListService.fetchPhotosNextPage { result in
-                switch result {
-                case .success(let photos):
-                    print("Получено \(self.imagesListService.photos.count) новых фотографий")
-                case .failure(let error):
-                    print("Ошибка при загрузке фотографий: \(error)")
-                }
-            }
-        } else {
-            return
-        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -7,25 +7,41 @@
 
 import Foundation
 
-struct PhotoResult: Codable {
+// Структура предоставляющая информацию о фото
+struct Photo {
     let id: String
-    let created_at: String
-    let updated_at: String
-    let width: Int
-    let height: Int
-    let color: String
-    let blur_hash: String
-    let likes: Int
-    let liked_by_user: Bool
-    let description: String
-    let user: ProfileResult
-    let urls: UrlsResult
+    let size: CGSize
+    let createdAt: Date?
+    let welcomeDescription: String?
+    let thumbImageURL: String
+    let largeImageURL: String
+    let isLiked: Bool
 }
 
+// Структура для декодирования JSON-ответа с информацией о фото
+struct PhotoResult: Codable {
+    let id: String
+    let createdAt: String?
+    let width: Int
+    let height: Int
+    let isLikedByUser: Bool
+    let description: String
+    let urls: UrlsResult
+    
+    // Определение ключей для декодирования
+    enum CodingKeys: String, CodingKey {
+        case id
+        case createdAt = "created_at"
+        case width
+        case height
+        case isLikedByUser = "liked_by_user"
+        case description
+        case urls
+    }
+}
+
+// Структура для декодирования JSON-ответа URL-ами
 struct UrlsResult: Codable {
-    let raw: String
     let full: String
-    let regular: String
-    let small: String
     let thumb: String
 }
