@@ -120,4 +120,8 @@ private extension ImagesListService {
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         return request
     }
+    
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        
+    }
 }
