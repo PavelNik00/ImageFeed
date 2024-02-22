@@ -121,7 +121,56 @@ private extension ImagesListService {
         return request
     }
     
+    // задаем функцию для изменения лайка к фото с заданным индикатором
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         
+        // строка для формирования пути запроса к API для изменения лайка
+        let path = "photos/\(photoId)/like"
+        
+        // определение HTTP-метода в зависимости от того, ставим лайк или убираем
+        let httpMethod = isLike ? "POST" : "DELETE"
+        
+        // создание базового объекта URLRequest с использованием расширения makeHTTPRequest
+        var request = URLRequest.makeHTTPRequest(path: path, httpMethod: httpMethod)
+        
+        // получаем токен доступа OAth2 из хранилища
+        guard let bearerToken = oauth2TokenStorage.token else { return }
+        
+        // устанавливаем токен в заголовок запроса для авторизации
+        request.setValue("bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+        
+        // выполняем асинхронный запрос к API для изменения статуса лайка
+        let task = urlSession.data(for: request) { result in
+            switch result {
+            case .success:
+                // при успешном запросе обновляем статус лайка в массиве photos
+                // поиск индекса элемента
+                if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                    // текущий элемент
+                    let photo = self.photos[index]
+                    // копия элемента с инвертированным значением isLiked
+                    let newPhoto = Photo(
+                        id: photo.id,
+                        size: photo.size,
+                        createdAt: photo.createdAt,
+                        welcomeDescription: photo.welcomeDescription,
+                        thumbImageURL: photo.thumbImageURL,
+                        largeImageURL: photo.largeImageURL,
+                        isLiked: !photo.isLiked) // инвертируем статус лайка
+                    // заменяем элемент в массиве
+                    self.photos[index] = newPhoto
+                }
+                // возвращаем успешное завершение с пустым запросом
+                let voidReturn: Void = ()
+                completion(.success(voidReturn))
+                
+            case .failure(let error):
+                // возвращаем ошибку при ошибке :)
+                completion(.failure(error))
+            }
+        }
+        
+        // тут запускаем выполнение задачи
+        task.resume()
     }
 }
