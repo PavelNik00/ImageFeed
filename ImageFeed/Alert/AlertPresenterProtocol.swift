@@ -10,3 +10,7 @@ import Foundation
 protocol AlertPresenterProtocol: AnyObject {
     func showError(for model: AlertModel)
 }
+
+protocol AlertPresenterRepeatProtocol: AnyObject {
+    func showError(for model: AlertModelRepeat)
+}

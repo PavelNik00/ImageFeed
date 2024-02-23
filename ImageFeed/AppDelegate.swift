@@ -6,11 +6,19 @@
 //
 
 import UIKit
+import ProgressHUD
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+            ProgressHUD.animationType = .squareCircuitSnake
+            ProgressHUD.colorAnimation = .lightGray
+//            ProgressHUD.colorProgress = .systemBlue
+            ProgressHUD.colorBackground = .ypBlack
+            ProgressHUD.colorHUD = .ypBlack
         return true
     }
     

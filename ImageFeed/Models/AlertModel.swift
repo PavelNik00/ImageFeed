@@ -13,3 +13,11 @@ struct AlertModel {
     let buttonText: String
     let completion: () -> Void
 }
+
+struct AlertModelRepeat {
+    let title: String
+    let message: String
+    let buttonText: String
+    let cancelButtonText: String
+    let completion: () -> Void
+}
