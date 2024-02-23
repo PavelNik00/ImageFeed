@@ -20,6 +20,8 @@ final class ImagesListViewController: UIViewController {
     // наблюдатель для изменениями в ImagesListService
     private var imagesListServiceObserver: NSObjectProtocol?
     
+    private var alertPresenter: AlertPresenterProtocol?
+    
     // форматирование даты для отображения
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -125,6 +127,7 @@ extension ImagesListViewController: UITableViewDataSource {
         let likeImage = image.isLiked ? UIImage(named: "like_button_on") : UIImage(named: "like_button_off")
         cell.likeButton.setImage(likeImage, for: .normal)
         
+        cell.delegate = self
     }
     
     // Объявление метода делегата, который будет вызван перед отображением ячейки в таблице.
@@ -177,3 +180,57 @@ extension ImagesListViewController: UITableViewDelegate {
     }
 }
 
+extension ImagesListViewController: ImagesListCellDelegate {
+    
+    // метод, который вызывается при нажатии на лайк в ячейке
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        
+        // Получаем индекс строки (картинки) в таблице по ячейке, на которую нажал пользователь
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        
+        // Получаем объект Photo для соответствующей строки
+        let photo = photos[indexPath.row]
+        
+        // покажем лоадер
+        UIBlockingProgressHUD.show()
+        
+        // Вызываем метод изменения статуса лайка для картинки через сервис ImagesListService
+        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { result in
+            switch result {
+            case .success:
+                // синхронизируем массив картинок с сервисом
+                self.photos = self.imagesListService.photos
+                // изменим индикацию лайка картинки
+                cell.setIsLiked(self.photos[indexPath.row].isLiked)
+                // уберем лоадер
+                UIBlockingProgressHUD.dismiss()
+            case .failure:
+                UIBlockingProgressHUD.dismiss()
+                self.showLikeError()
+            }
+        }
+    }
+}
+
+extension ImagesListViewController {
+    
+    // метод для отображения ошибки при изменении лайка
+    private func showLikeError() {
+        
+        // создаем модель алерта
+        let alert = AlertModel(
+            title: "Что-то пошло не так(",
+            message: "Не удалось поставить или убрать лайк",
+            buttonText: "ОК"
+            ) { [weak self] in
+                guard let self else { return }
+                // закрываем алерт при нажатии на кнопку
+                self.dismiss(animated: true)
+            }
+        // инициализируем презентер алертов и присваиваем его свойству alertPresenter
+        alertPresenter = AlertPresenter(delegate: self)
+        
+        // отображаем алерт
+        alertPresenter?.showError(for: alert)
+    }
+}

@@ -120,9 +120,13 @@ private extension ImagesListService {
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         return request
     }
-    
+}
+
+extension ImagesListService {
     // задаем функцию для изменения лайка к фото с заданным индикатором
-    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+    func changeLike(photoId: String, 
+                    isLike: Bool,
+                    _ completion: @escaping (Result<Void, Error>) -> Void) {
         
         // строка для формирования пути запроса к API для изменения лайка
         let path = "photos/\(photoId)/like"
@@ -137,7 +141,7 @@ private extension ImagesListService {
         guard let bearerToken = oauth2TokenStorage.token else { return }
         
         // устанавливаем токен в заголовок запроса для авторизации
-        request.setValue("bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         
         // выполняем асинхронный запрос к API для изменения статуса лайка
         let task = urlSession.data(for: request) { result in
