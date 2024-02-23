@@ -95,6 +95,12 @@ final class ImagesListService {
         // Запуск задачи
         task.resume()
     }
+    
+    // Добавляем метод для очистки массива фотографий
+    func clearPhotos() {
+        photos = []
+        lastLoadedPage = nil
+    }
 }
 
 // MARK: - Methods

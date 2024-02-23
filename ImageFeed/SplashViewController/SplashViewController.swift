@@ -148,9 +148,7 @@ extension SplashViewController {
             message: "Не удалось войти в систему",
             buttonText: "ОК",
             completion: { [weak self] in
-                guard self != nil else {
-                    return
-                }
+                guard self != nil else { return }
                 self?.switchToAuthViewController()
             })
         alertPresenter?.showError(for: alert)

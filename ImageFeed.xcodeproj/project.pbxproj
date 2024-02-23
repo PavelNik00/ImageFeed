@@ -41,6 +41,7 @@
 		E9DAA1122B7BF8D200A018ED /* AlertPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DAA1112B7BF8D200A018ED /* AlertPresenterProtocol.swift */; };
 		E9E196FD2B5F237000E666AA /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E196FC2B5F237000E666AA /* AuthViewController.swift */; };
 		E9E197002B5F2E9200E666AA /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E196FF2B5F2E9200E666AA /* WebViewViewController.swift */; };
+		E9E6D15F2B88CE0700CD3C39 /* ProfileLogoutService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E6D15E2B88CE0700CD3C39 /* ProfileLogoutService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +78,7 @@
 		E9DAA1112B7BF8D200A018ED /* AlertPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenterProtocol.swift; sourceTree = "<group>"; };
 		E9E196FC2B5F237000E666AA /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		E9E196FF2B5F2E9200E666AA /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
+		E9E6D15E2B88CE0700CD3C39 /* ProfileLogoutService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLogoutService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				E93B9A432B2B51F00032E56D /* ProfileViewController.swift */,
 				E9DAA1052B7BDE5F00A018ED /* ProfileImageService.swift */,
 				E9DAA0F12B72AAB300A018ED /* ProfileService.swift */,
+				E9E6D15E2B88CE0700CD3C39 /* ProfileLogoutService.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -343,6 +346,7 @@
 				E9C5A8EC2B8542BC0045D054 /* PhotoResultModel.swift in Sources */,
 				E9A507F52B18D2EB0009D5B5 /* SceneDelegate.swift in Sources */,
 				E9DAA0F22B72AAB300A018ED /* ProfileService.swift in Sources */,
+				E9E6D15F2B88CE0700CD3C39 /* ProfileLogoutService.swift in Sources */,
 				E9DAA1102B7BF8A900A018ED /* AlertPresenter.swift in Sources */,
 				E9DAA1122B7BF8D200A018ED /* AlertPresenterProtocol.swift in Sources */,
 			);

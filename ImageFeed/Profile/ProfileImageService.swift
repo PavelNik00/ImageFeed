@@ -50,8 +50,14 @@ final class ProfileImageService {
                 completion(.failure(error))
             }
         }
+        
         self.task = task
         task.resume()
+    }
+    
+    // Добавляем метод для очистки данных аватарки
+    func clearAvatar() {
+        avatarUrl = nil
     }
 }
 
