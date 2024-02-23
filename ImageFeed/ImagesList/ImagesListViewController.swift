@@ -22,6 +22,7 @@ final class ImagesListViewController: UIViewController {
     
     private var alertPresenter: AlertPresenterProtocol?
     
+//    private let dateFormatter = ISO8601DateFormatter()
     // форматирование даты для отображения
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -122,7 +123,7 @@ extension ImagesListViewController: UITableViewDataSource {
         // установка даты в ячейку
         let createdDate = image.createdAt
         // если дата существует то форматируем и устанавливаем ее, если нет - оставляем пустым
-        cell.dateLabel.text = createdDate != nil ? dateFormatter.string(from: Date()) : ""
+        cell.dateLabel.text = createdDate != nil ? dateFormatter.string(from: createdDate!) : ""
         
         // установка изображения лайка
 //        let isLiked = indexPath.row % 2 == 0
