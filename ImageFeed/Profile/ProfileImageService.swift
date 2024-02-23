@@ -12,7 +12,7 @@ final class ProfileImageService {
     //MARK: - Public Properties
     static let shared = ProfileImageService()
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
-
+    
     //MARK: - Private Properties
     
     private (set) var avatarUrl: String?
@@ -55,7 +55,6 @@ final class ProfileImageService {
         task.resume()
     }
     
-    // Добавляем метод для очистки данных аватарки
     func clearAvatar() {
         avatarUrl = nil
     }

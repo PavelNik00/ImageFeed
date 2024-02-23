@@ -7,7 +7,6 @@
 
 import Foundation
 
-// Структура предоставляющая информацию о фото
 struct Photo {
     let id: String
     let size: CGSize
@@ -18,7 +17,6 @@ struct Photo {
     let isLiked: Bool
 }
 
-// Структура для декодирования JSON-ответа с информацией о фото
 struct PhotoResult: Codable {
     let id: String
     let createdAt: String?
@@ -28,7 +26,6 @@ struct PhotoResult: Codable {
     let description: String?
     let urls: UrlsResult
     
-    // Определение ключей для декодирования
     enum CodingKeys: String, CodingKey {
         case id
         case createdAt = "created_at"
@@ -40,7 +37,6 @@ struct PhotoResult: Codable {
     }
 }
 
-// Структура для декодирования JSON-ответа URL-ами
 struct UrlsResult: Codable {
     let full: String
     let thumb: String

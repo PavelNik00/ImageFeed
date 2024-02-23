@@ -40,13 +40,12 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Private Func
     
-    // отписываемся от наблюдений при выходе пользователя
     deinit {
         if let observer = profileImageServiceObserver {
             NotificationCenter.default.removeObserver(observer)
         }
     }
-
+    
     private func updateProfileDetails(profile: Profile?) {
         guard let profile = profile else { return }
         nameLabel.text = profile.name
@@ -132,10 +131,6 @@ private extension ProfileViewController {
         guard
             let profileImageURL = profileImageService.avatarUrl,
             let url = URL(string: profileImageURL) else { return }
-        
-//        let cache = ImageCache.default
-//        cache.clearMemoryCache()
-//        cache.clearDiskCache()
         
         let processor = RoundCornerImageProcessor(cornerRadius: 61)
         profileImage.kf.indicatorType = .activity

@@ -155,10 +155,10 @@ extension WebViewViewController {
             title: "Что-то пошло не так(",
             message: "Не удалось войти в систему",
             buttonText: "Ок"
-            ) { [weak self] in
-                guard let self else { return }
-                dismiss(animated: true)
-            }
+        ) { [weak self] in
+            guard let self else { return }
+            dismiss(animated: true)
+        }
         alertPresenter = AlertPresenter(delegate: self)
         alertPresenter?.showError(for: alert)
     }

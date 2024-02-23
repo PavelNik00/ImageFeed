@@ -40,8 +40,8 @@ final class OAuth2Service {
         lastCode = code
         
         guard let request = authTokenRequest(code: code) else { return }
-        let task = urlSession.objectTask(for: request) { [weak self] (result:
-        Result<OAuthTokenResponseBody, Error>) in
+        let task = urlSession.objectTask(for: request) { [weak self] (
+            result: Result<OAuthTokenResponseBody, Error>) in
             guard let self = self else { return }
             switch result {
             case .success(let body):
@@ -73,5 +73,5 @@ extension OAuth2Service {
         )
     }
 }
-    
+
 
