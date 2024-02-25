@@ -19,10 +19,6 @@ final class ProfileLogoutService {
         clearProfileAvatar()
         clearPhotos()
         clearToken()
-        
-        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
-            sceneDelegate.showInitialScreen()
-        }
     }
     
     private func cleanCookies() {

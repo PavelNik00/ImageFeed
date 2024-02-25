@@ -120,16 +120,39 @@ final class ProfileViewController: UIViewController {
         view.addSubview(label)
     }
     
+    private func switchToSplashViewController() {
+        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+            sceneDelegate.showInitialScreen()
+        }
+    }
+    
+    private func showLogoutAlert() {
+        
+        let alert = AlertModelRepeat(
+            title: "Пока, пока!",
+            message: "Уверены что хотите выйти?",
+            buttonText: "Да",
+            cancelButtonText: "Нет"
+        ) { [weak self] isConfirmd in
+            guard let self = self else { return }
+            if isConfirmd {
+                ProfileLogoutService.shared.logout()
+                self.switchToSplashViewController()
+            }
+        }
+        AlertPresenter.showAlert(for: alert, in: self)
+    }
+    
+    
     // MARK: - IB Action
     @IBAction private func didTapLogoutButton() {
-        ProfileLogoutService.shared.logout()
+        showLogoutAlert()
     }
 }
 
 private extension ProfileViewController {
     private func updateAvatar() {
-        guard
-            let profileImageURL = profileImageService.avatarUrl,
+        guard let profileImageURL = profileImageService.avatarUrl,
             let url = URL(string: profileImageURL) else { return }
         
         let processor = RoundCornerImageProcessor(cornerRadius: 61)

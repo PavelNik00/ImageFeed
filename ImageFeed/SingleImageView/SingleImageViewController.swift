@@ -21,7 +21,7 @@ final class SingleImageViewController: UIViewController {
     
     var fullImageURL: URL?
     
-    private var alertPresenter: AlertPresenterRepeatProtocol?
+    //    private var alertPresenter: AlertPresenter?
     
     // MARK: - IBOutlets
     
@@ -103,11 +103,12 @@ extension SingleImageViewController {
             message: "Не удалось загрузить картинку",
             buttonText: "Повторить",
             cancelButtonText: "Не надо"
-            ) { [weak self] in
-                guard let self else { return }
+        ) { [weak self] isConfirmed in
+            guard let self else { return }
+            if isConfirmed {
                 self.setImageWithURL()
             }
-        alertPresenter = AlertPresenter(delegate: self)
-        alertPresenter?.showError(for: alert)
+        }
+        AlertPresenter.showAlert(for: alert, in: self)
     }
 }

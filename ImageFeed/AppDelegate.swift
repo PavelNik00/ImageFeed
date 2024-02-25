@@ -14,13 +14,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-            ProgressHUD.animationType = .squareCircuitSnake
-            ProgressHUD.colorAnimation = .lightGray
-            ProgressHUD.colorBackground = .ypBlack
-            ProgressHUD.colorHUD = .ypBlack
+            configureProgressHUD()
             return true
         }
     
+    func configureProgressHUD() {
+        ProgressHUD.animationType = .squareCircuitSnake
+        ProgressHUD.colorAnimation = .lightGray
+        ProgressHUD.colorBackground = .ypBlack
+        ProgressHUD.colorHUD = .ypBlack
+    }
     // MARK: UISceneSession Lifecycle
     
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {

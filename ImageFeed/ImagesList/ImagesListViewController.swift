@@ -16,7 +16,7 @@ final class ImagesListViewController: UIViewController {
     
     private var imagesListServiceObserver: NSObjectProtocol?
     
-    private var alertPresenter: AlertPresenterProtocol?
+    private var alertPresenter: AlertModelProtocol?
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -44,8 +44,8 @@ final class ImagesListViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showSingleImageSegueIdentifier {
             if let viewController = segue.destination as? SingleImageViewController,
-            let indexPath = sender as? IndexPath, 
-               indexPath.row < photos.count {
+               let indexPath = sender as? IndexPath, 
+                indexPath.row < photos.count {
                 viewController.image = UIImage()
                 let imageUrl = photos[indexPath.row].largeImageURL
                 guard let fullImageURL = URL(string: imageUrl) else { return }
@@ -172,11 +172,12 @@ extension ImagesListViewController {
             title: "Что-то пошло не так(",
             message: "Не удалось поставить или убрать лайк",
             buttonText: "ОК"
-            ) { [weak self] in
-                guard let self else { return }
+        ) { [weak self] isConfirmed in
+            guard let self = self else { return }
+            if isConfirmed {
                 self.dismiss(animated: true)
             }
-        alertPresenter = AlertPresenter(delegate: self)
-        alertPresenter?.showError(for: alert)
+        }
+        AlertPresenter.showAlert(for: alert, in: self)
     }
 }

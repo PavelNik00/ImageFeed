@@ -23,7 +23,7 @@ final class WebViewViewController: UIViewController {
     
     // MARK: - Private Properties
     private var estimatedProgressObservation: NSKeyValueObservation?
-    private var alertPresenter: AlertPresenterProtocol?
+    //    private var alertPresenter: AlertPresenter?
     
     fileprivate let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
     
@@ -155,11 +155,13 @@ extension WebViewViewController {
             title: "Что-то пошло не так(",
             message: "Не удалось войти в систему",
             buttonText: "Ок"
-        ) { [weak self] in
+        ) { [weak self] isConfirmed in
             guard let self else { return }
-            dismiss(animated: true)
+            if isConfirmed {
+                dismiss(animated: true)
+            }
         }
-        alertPresenter = AlertPresenter(delegate: self)
-        alertPresenter?.showError(for: alert)
+        //        alertPresenter = AlertPresenter(delegate: self)
+        AlertPresenter.showAlert(for: alert, in: self)
     }
 }

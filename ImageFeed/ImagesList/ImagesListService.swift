@@ -28,9 +28,11 @@ final class ImagesListService {
         let nextPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
         lastLoadedPage = nextPage
 
-        let request = nextPageRequest(nextPage: nextPage)
+        guard let request = nextPageRequest(nextPage: nextPage) else { return }
         
-        let task = urlSession.objectTask(for: request) { (result: Result<[PhotoResult], Error>) in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let photoResultList):
                 for photoResult in photoResultList {
@@ -76,17 +78,26 @@ final class ImagesListService {
 
 // MARK: - Methods
 private extension ImagesListService {
-    func nextPageRequest(nextPage: Int) -> URLRequest {
+    func nextPageRequest(nextPage: Int) -> URLRequest? {
         let imageListURL = Constants.defaultBaseURL.absoluteString + "/photos"
         var urlComponents = URLComponents(string: imageListURL)
         urlComponents?.queryItems = [
             URLQueryItem(name: "page", value: "\(nextPage)"),
         ]
-        guard let finalUrl = urlComponents?.url else { fatalError("Failed to create URL from components") }
+        
+        guard let finalUrl = urlComponents?.url else {
+            print("Failed to create URL from components")
+            return nil
+        }
+        
         var request = URLRequest(url: finalUrl)
         request.httpMethod = "GET"
         
-        guard let bearerToken = oauth2TokenStorage.token else { fatalError("OAuth token is missing") }
+        guard let bearerToken = oauth2TokenStorage.token else {
+            print("OAuth token is missing")
+        return nil
+        }
+    
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         return request
     }
