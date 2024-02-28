@@ -7,8 +7,12 @@
 
 import Foundation
 
+struct ImagesSize: Codable {
+    let large: String
+}
+
 struct UserResult: Codable {
-    let profileImage: [String: String]
+    let profileImage: ImagesSize
     
     enum CodingKeys: String, CodingKey {
         case profileImage = "profile_image"

@@ -26,7 +26,7 @@ final class SplashViewController: UIViewController {
     private let mainID = "Main"
     private let authViewControllerID = "AuthViewController"
     private let tabBarViewControllerID = "TabBarViewController"
-    private var alertPresenter: AlertPresenterProtocol?
+    private var alertPresenter: AlertPresenter?
     
     // MARK: - View Life Cycles
     
@@ -147,12 +147,12 @@ extension SplashViewController {
             title: "Что-то пошло не так(",
             message: "Не удалось войти в систему",
             buttonText: "ОК",
-            completion: { [weak self] in
-                guard self != nil else {
-                    return
+            completion: { [weak self] isConfirmed in
+                guard self != nil else { return }
+                if isConfirmed {
+                    self?.switchToAuthViewController()
                 }
-                self?.switchToAuthViewController()
             })
-        alertPresenter?.showError(for: alert)
+        AlertPresenter.showAlert(for: alert, in: self)
     }
 }

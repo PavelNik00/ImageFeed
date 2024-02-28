@@ -23,23 +23,28 @@ final class ProfileService {
         assert(Thread.isMainThread)
         if profile != nil { return }
         task?.cancel()
+        
         let request = profileRequest(token: token)
         let task = urlSession.objectTask(for: request) { [weak self] (
             result: Result<ProfileResult,Error>
         ) in
-                guard let self = self else { return }
-                switch result {
-                case .success(let body):
-                    let profile = Profile(callData: body)
-                    self.profile = profile
-                    completion(.success(profile))
-                    self.task = nil
-                case .failure(let error):
-                    completion(.failure(error))
-                }
+            guard let self = self else { return }
+            switch result {
+            case .success(let body):
+                let profile = Profile(callData: body)
+                self.profile = profile
+                completion(.success(profile))
+                self.task = nil
+            case .failure(let error):
+                completion(.failure(error))
             }
+        }
         self.task = task
         task.resume()
+    }
+    
+    func clearProfile() {
+        profile = nil
     }
 }
 

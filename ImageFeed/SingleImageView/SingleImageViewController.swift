@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     
@@ -14,10 +15,13 @@ final class SingleImageViewController: UIViewController {
     var image: UIImage! {
         didSet {
             guard isViewLoaded else { return }
-            imageView.image = image
             rescaleAndCenterImageInScrollView(image: image ?? UIImage() )
         }
     }
+    
+    var fullImageURL: URL?
+    
+    //    private var alertPresenter: AlertPresenter?
     
     // MARK: - IBOutlets
     
@@ -31,8 +35,8 @@ final class SingleImageViewController: UIViewController {
         super.viewDidLoad()
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
-        imageView.image = image
-        rescaleAndCenterImageInScrollView(image: image ?? UIImage())
+        
+        setImageWithURL()
     }
     
     // MARK: - Private func
@@ -54,6 +58,21 @@ final class SingleImageViewController: UIViewController {
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
     
+    func setImageWithURL() {
+        guard let fullImageURL else { return }
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: fullImageURL) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            guard let self = self else { return }
+            switch result {
+            case .success(let imageResult):
+                self.image = imageResult.image
+            case .failure:
+                self.showError()
+            }
+        }
+    }
+    
     // MARK: - IB Action
     @IBAction func didTapBackButton() {
         dismiss(animated: true, completion: nil)
@@ -72,5 +91,24 @@ final class SingleImageViewController: UIViewController {
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         imageView
+    }
+}
+
+extension SingleImageViewController {
+    
+    private func showError() {
+        
+        let alert = AlertModelRepeat(
+            title: "Что-то пошло не так. Попробовать ещё раз?",
+            message: "Не удалось загрузить картинку",
+            buttonText: "Повторить",
+            cancelButtonText: "Не надо"
+        ) { [weak self] isConfirmed in
+            guard let self else { return }
+            if isConfirmed {
+                self.setImageWithURL()
+            }
+        }
+        AlertPresenter.showAlert(for: alert, in: self)
     }
 }

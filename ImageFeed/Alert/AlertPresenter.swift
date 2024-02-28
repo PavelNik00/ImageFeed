@@ -7,14 +7,15 @@
 
 import UIKit
 
-final class AlertPresenter: AlertPresenterProtocol {
+final class AlertPresenter {
+    
     private weak var delegate: UIViewController?
     
     init(delegate: UIViewController) {
         self.delegate = delegate
     }
     
-    func showError(for model: AlertModel) {
+    static func showAlert(for model: AlertModelProtocol, in viewController: UIViewController) {
         let alert = UIAlertController(
             title: model.title,
             message: model.message,
@@ -22,11 +23,23 @@ final class AlertPresenter: AlertPresenterProtocol {
         
         let action = UIAlertAction(
             title: model.buttonText,
-            style: .default) { _ in
-                model.completion()
-            }
+            style: .default
+        ) { _ in
+            model.completion(true)
+        }
         alert.addAction(action)
         
-        delegate?.present(alert, animated: true)
+        if let modelRepeat = model as? AlertModelRepeat {
+            let actionCancel = UIAlertAction(
+                title: modelRepeat.cancelButtonText,
+                style: .default
+            ) { _ in
+                modelRepeat.completion(false)
+            }
+            alert.addAction(actionCancel)
+        }
+        
+        viewController.present(alert, animated: true, completion: nil)
     }
+    
 }
