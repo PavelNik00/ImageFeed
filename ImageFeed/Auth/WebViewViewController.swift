@@ -11,6 +11,8 @@ import WebKit
 public protocol WebViewViewControllerProtocol: AnyObject {
     var presenter: WebViewPresenterProtocol? { get set }
     func load(request: URLRequest)
+    func setProgressValue(_ newValue: Float)
+    func setProgressHidden(_ isHidden: Bool)
 }
 
 protocol WebViewViewControllerDelegate: AnyObject {
@@ -45,12 +47,12 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
              options: [],
              changeHandler: { [weak self] _, _ in
                  guard let self = self else { return }
-                 self.updateProgress()
+//                 self.updateProgress()
              })
         
         webView.navigationDelegate = self
         presenter?.viewDidLoad()
-        updateProgress()
+//        updateProgress()
         
 //        guard var urlComponents = URLComponents(string: unsplashAuthorizeURLString) else {
 //            print("Error: Unable to create URLComponents from string")
@@ -80,7 +82,7 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
             forKeyPath: #keyPath(WKWebView.estimatedProgress),
             options: .new,
             context: nil)
-        updateProgress()
+//        updateProgress()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -100,7 +102,8 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
         context: UnsafeMutableRawPointer?
     ) {
         if keyPath == #keyPath(WKWebView.estimatedProgress) {
-            updateProgress()
+            presenter?.didUpdateProgressValue(webView.estimatedProgress)
+//            updateProgress()
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
@@ -117,6 +120,14 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
         withError error: Error
     ) {
         showNetworkError()
+    }
+    
+    func setProgressValue(_ newValue: Float) {
+        progressView.progress = newValue
+    }
+    
+    func setProgressHidden(_ isHidden: Bool) {
+        progressView.isHidden = isHidden
     }
     
     // MARK: - Private Func
