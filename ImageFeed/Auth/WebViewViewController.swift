@@ -8,12 +8,19 @@
 import UIKit
 import WebKit
 
+public protocol WebViewViewControllerProtocol: AnyObject {
+    var presenter: WebViewPresenterProtocol? { get set }
+    func load(request: URLRequest)
+}
+
 protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
-final class WebViewViewController: UIViewController {
+final class WebViewViewController: UIViewController & WebViewViewControllerProtocol {
+    var presenter: WebViewPresenterProtocol?
+    
     // MARK: - Properties
     weak var delegate: WebViewViewControllerDelegate?
     
@@ -41,27 +48,29 @@ final class WebViewViewController: UIViewController {
                  self.updateProgress()
              })
         
-        guard var urlComponents = URLComponents(string: unsplashAuthorizeURLString) else {
-            print("Error: Unable to create URLComponents from string")
-            return
-        }
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: Constants.accessScope)
-        ]
-        
-        guard let url = urlComponents.url else {
-            print("Error: Unable to create URL from URLComponents")
-            return
-        }
-        
-        let request = URLRequest(url: url)
-        webView.load(request)
-        
+        webView.navigationDelegate = self
+        presenter?.viewDidLoad()
         updateProgress()
+        
+//        guard var urlComponents = URLComponents(string: unsplashAuthorizeURLString) else {
+//            print("Error: Unable to create URLComponents from string")
+//            return
+//        }
+//        
+//        urlComponents.queryItems = [
+//            URLQueryItem(name: "client_id", value: Constants.accessKey),
+//            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
+//            URLQueryItem(name: "response_type", value: "code"),
+//            URLQueryItem(name: "scope", value: Constants.accessScope)
+//        ]
+//        
+//        guard let url = urlComponents.url else {
+//            print("Error: Unable to create URL from URLComponents")
+//            return
+//        }
+//        
+//        let request = URLRequest(url: url)
+//        webView.load(request)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -98,6 +107,10 @@ final class WebViewViewController: UIViewController {
     }
     
     // MARK: - Public Methods
+    func load(request: URLRequest) {
+        webView.load(request)
+    }
+    
     func webView(
         _ webView: WKWebView,
         didFailProvisionalNavigation navigation: WKNavigation!,
