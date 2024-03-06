@@ -77,7 +77,10 @@ final class WebViewTests: XCTestCase {
         
         // when
         let url = authHelper.authURL()
-        let urlString = url!.absoluteString
+        guard let urlString = url?.absoluteString else {
+            XCTFail("Авторизационная ссылка собрана неверно")
+            return
+        }
         
         // then
         XCTAssertTrue(urlString.contains(configuration.authURLString))
@@ -88,11 +91,18 @@ final class WebViewTests: XCTestCase {
 
     }
     
-    override func setUpWithError() throws { }
-
-    override func tearDownWithError() throws { }
-
-    func testExample() throws { }
-
-    func testPerformanceExample() throws { measure { } }
+    // тест для проверки того, что AuthHelper корректно распознает код из ссылки
+    func testCodeFromURL() {
+        // given
+        var urlComponents = URLComponents(string: "https://unsplash.com/oauth/authorize/native")!
+        urlComponents.queryItems = [URLQueryItem(name: "code", value: "test code")]
+        let url = urlComponents.url!
+        let authHelper = AuthHelper()
+        
+        // when
+        let code = authHelper.code(from: url)
+        
+        // then
+        XCTAssertEqual(code, "test code")
+    }
 }
