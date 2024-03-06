@@ -107,5 +107,24 @@ final class ImageFeedUITests: XCTestCase {
     
     func testProfile() throws {
         // тестируем сценарий профиля
+        
+        // Подождать, пока открывается и загружается экран ленты
+        // Перейти на экран профиля
+        // Проверить, что на нём отображаются ваши персональные данные
+        // Нажать кнопку логаута
+        // Проверить, что открылся экран авторизации
+        
+        sleep(3)
+
+        app.tabBars.buttons.element(boundBy: 0).tap() // нажмем таб с индексом 0 на tabbar
+        
+        XCTAssertTrue(app.staticTexts["Name Lastname"].exists)
+        XCTAssertTrue(app.staticTexts["@username"].exists)
+        
+        app.buttons["logout_button"].tap()
+        
+        app.alerts["Пока, пока!"].scrollViews.otherElements.buttons["Да"].tap() // наждем кнопку ОК на алерте с заголовкам Alert
+        
+//        app.staticTexts["Text"].exists // поле exists подскажет существует ли такой текст на экране
     }
 }
