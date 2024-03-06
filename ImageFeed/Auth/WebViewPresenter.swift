@@ -19,12 +19,12 @@ public protocol WebViewPresenterProtocol {
 final class WebViewPresenter: WebViewPresenterProtocol {
     weak var view: WebViewViewControllerProtocol?
     
-    fileprivate let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+//    fileprivate let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
 
     func viewDidLoad() {
-        guard var urlComponents = URLComponents(string: unsplashAuthorizeURLString) 
+        guard var urlComponents = URLComponents(string: AuthConfiguration.standart.authURLString)
         else {
-            assertionFailure("Invalid authorization URL string: \(unsplashAuthorizeURLString)")
+            assertionFailure("Invalid authorization URL string: \(AuthConfiguration.standart.authURLString)")
             return
         }
 
