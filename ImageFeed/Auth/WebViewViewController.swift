@@ -130,11 +130,11 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
         progressView.isHidden = isHidden
     }
     
-    // MARK: - Private Func
-    private func updateProgress() {
-        progressView.setProgress(Float(webView.estimatedProgress), animated: true)
-        progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
-    }
+//    // MARK: - Private Func
+//    private func updateProgress() {
+//        progressView.setProgress(Float(webView.estimatedProgress), animated: true)
+//        progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
+//    }
     
     // MARK: - IB Action
     @IBAction private func didTapBackButton() {
@@ -157,19 +157,27 @@ extension WebViewViewController: WKNavigationDelegate {
         }
     }
     
-    private func code(from navigationAction: WKNavigationAction) -> String? {
-        if
-            let url = navigationAction.request.url,
-            let urlComponents = URLComponents(string: url.absoluteString),
-            urlComponents.path == "/oauth/authorize/native",
-            let items = urlComponents.queryItems,
-            let codeItem = items.first(where: { $0.name == "code" })
-        {
-            return codeItem.value
-        } else {
+    // добавили вызов презентера для анализа URL
+        private func code(from navigationAction: WKNavigationAction) -> String? {
+            if let url = navigationAction.request.url {
+                return presenter?.code(from: url)
+            }
             return nil
         }
-    }
+    
+//    private func code(from navigationAction: WKNavigationAction) -> String? {
+//        if
+//            let url = navigationAction.request.url,
+//            let urlComponents = URLComponents(string: url.absoluteString),
+//            urlComponents.path == "/oauth/authorize/native",
+//            let items = urlComponents.queryItems,
+//            let codeItem = items.first(where: { $0.name == "code" })
+//        {
+//            return codeItem.value
+//        } else {
+//            return nil
+//        }
+//    }
 }
 
 //MARK: - AlertPresenter

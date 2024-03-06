@@ -36,10 +36,14 @@ final class OAuth2Service {
     ) {
         assert(Thread.isMainThread)
         if lastCode == code { return }
+        print("Error: OAuth2Service encountered an invalid request - repeated code.")
         task?.cancel()
         lastCode = code
         
-        guard let request = authTokenRequest(code: code) else { return }
+        guard let request = authTokenRequest(code: code) else {
+            print("Error: Failed to make request with code \(code).")
+            return
+        }
         let task = urlSession.objectTask(for: request) { [weak self] (
             result: Result<OAuthTokenResponseBody, Error>) in
             guard let self = self else { return }
@@ -50,6 +54,7 @@ final class OAuth2Service {
                 completion(.success(authToken))
                 self.task = nil
             case .failure(let error):
+                print("Error: OAuth2Service encountered an error - \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }

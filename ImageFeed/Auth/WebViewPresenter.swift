@@ -11,6 +11,9 @@ public protocol WebViewPresenterProtocol {
     var view: WebViewViewControllerProtocol? { get set }
     func viewDidLoad()
     func didUpdateProgressValue(_ newValue: Double)
+    
+    // презентер анализирует URL и достает из него код, если он есть
+    func code(from url: URL) -> String?
 }
 
 final class WebViewPresenter: WebViewPresenterProtocol {
@@ -19,8 +22,9 @@ final class WebViewPresenter: WebViewPresenterProtocol {
     fileprivate let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
 
     func viewDidLoad() {
-        guard var urlComponents = URLComponents(string: unsplashAuthorizeURLString) else {
-            print("Error: Unable to create URLComponents from string")
+        guard var urlComponents = URLComponents(string: unsplashAuthorizeURLString) 
+        else {
+            assertionFailure("Invalid authorization URL string: \(unsplashAuthorizeURLString)")
             return
         }
 
@@ -32,7 +36,7 @@ final class WebViewPresenter: WebViewPresenterProtocol {
         ]
 
         guard let url = urlComponents.url else {
-            print("Error: Unable to create URL from URLComponents")
+            assertionFailure("Failed to construct authorization URLRequest with components: \(urlComponents)")
             return
         }
 
@@ -53,5 +57,18 @@ final class WebViewPresenter: WebViewPresenterProtocol {
     
     func shouldHideProgress(for value: Float) -> Bool {
         abs(value - 1.0) <= 0.0001
+    }
+    
+    // презентер анализирует URL и достает из него код, если он есть, реализация метода
+    func code(from url: URL) -> String? {
+           if let urlComponents = URLComponents(string: url.absoluteString),
+            urlComponents.path == "/oauth/authorize/native",
+            let items = urlComponents.queryItems,
+            let codeItem = items.first(where: { $0.name == "code" })
+        {
+            return codeItem.value
+        } else {
+            return nil
+        }
     }
 }
