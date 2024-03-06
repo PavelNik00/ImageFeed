@@ -10,6 +10,7 @@ import XCTest
 
 final class WebViewTests: XCTestCase {
 
+    // тест для проверки вызова viewDidLoad презентера и вьюконтроллера
     func testViewControllerCallsViewDidLoad() {
         // given
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -25,6 +26,7 @@ final class WebViewTests: XCTestCase {
         XCTAssertTrue(presenter.viewDidLoadCalled) // проверка поведения
     }
     
+    // тест проверки вызова метода loadRequest вьюконтроллера после вызова presenter.viewDidLoad()
     func testPresenterCallsLoadRequest() {
         // given
         let viewController = WebViewViewControllerSpy()
@@ -37,6 +39,34 @@ final class WebViewTests: XCTestCase {
         presenter.viewDidLoad()
         //then
         XCTAssertTrue(viewController.loadRequestCalled)
+    }
+    
+    // тест для проверки значения прогресса равной меньше 1
+    func testProgressVisibleWhenLessThenOne() {
+        // given
+        let authHelper = AuthHelper()
+        let presenter = WebViewPresenter(authHelper: authHelper)
+        let progress: Float = 0.6
+        
+        // when
+        let shouldHideProgress = presenter.shouldHideProgress(for: progress)
+        
+        // then
+        XCTAssertFalse(shouldHideProgress)
+    }
+    
+    // тест для проверки значения прогресса равной 1
+    func testProgressHiddenWhenOne() {
+        // given
+        let authHelper = AuthHelper()
+        let presenter = WebViewPresenter(authHelper: authHelper)
+        let progress: Float = 1.0
+        
+        // when
+        let shouldHideProgress = presenter.shouldHideProgress(for: progress)
+        
+        // then
+        XCTAssertTrue(shouldHideProgress)
     }
     
     override func setUpWithError() throws { }
