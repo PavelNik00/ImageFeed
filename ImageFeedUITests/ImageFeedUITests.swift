@@ -54,8 +54,48 @@ final class ImageFeedUITests: XCTestCase {
         print(app.debugDescription)
     }
     
+    // тестируем сценарий ленты
     func testFeed() throws {
-        // тестируем сценарий ленты
+        // Подождать, пока открывается и загружается экран ленты
+        // Сделать жест «смахивания» вверх по экрану для его скролла
+        // Поставить лайк в ячейке верхней картинки
+        // Отменить лайк в ячейке верхней картинки
+        // Нажать на верхнюю ячейку
+        // Подождать, пока картинка открывается на весь экран
+        // Увеличить картинку
+        // Уменьшить картинку
+        // Вернуться на экран ленты
+        
+        // Подождать, пока открывается и загружается экран ленты
+        let tablesQuery = app.tables // вернет таблицы на экране
+        let cell = tablesQuery.children(matching: .cell).element(boundBy: 0) // вернет ячейку по индексу 0
+        
+        cell.swipeUp() // метод для осуществления скроллинга
+        sleep(2) // ожидание
+        
+        let cellToLike = tablesQuery.children(matching: .cell).element(boundBy: 1)
+        sleep(2)
+        
+        // нажатие на лайк - постановка
+        cellToLike.buttons["like_button_on"].tap()
+        sleep(2)
+        
+        // нажатие на лайк - отмена
+        cellToLike.buttons["like_button_off"].tap()
+        sleep(2)
+        
+        // нажатие на верхнюю картинку
+        cellToLike.tap()
+        sleep(2)
+        
+        // увеличение картинки
+        let image = app.scrollViews.images.element(boundBy: 0) // вернет первую картинку на scrollView
+        image.pinch(withScale: 3, velocity: 1) // zoom in
+        image.pinch(withScale: 0.5, velocity: -1) // zoom out
+        
+        // вернет экран ленты
+        let navBackButton = app.buttons["nav_back_button"]
+        navBackButton.tap()
     }
     
     func testProfile() throws {
