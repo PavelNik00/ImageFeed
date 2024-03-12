@@ -27,6 +27,22 @@ final class ImageFeedTests: XCTestCase {
         XCTAssertTrue(presenter.viewDidLoadCalled)
     }
     
+    func testPresenterCallsLoadRequest() {
+        // given
+        let viewController = WebViewViewControllerSpy()
+        let authHelper = AuthHelper()
+        let presenter = WebViewPresenter(authHelper: authHelper)
+        
+        viewController.presenter = presenter
+        presenter.view = viewController
+        
+        //when
+        presenter.viewDidLoad()
+        
+        //then
+        XCTAssertTrue(viewController.loadRequestCalled)
+    }
+    
     override func setUpWithError() throws { }
 
     override func tearDownWithError() throws { }
