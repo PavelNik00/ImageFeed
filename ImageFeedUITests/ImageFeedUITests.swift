@@ -98,8 +98,33 @@ final class ImageFeedUITests: XCTestCase {
         navBackButton.tap()
     }
     
+    // тестируем сценарий профиля
     func testProfile() throws {
-        // тестируем сценарий профиля
-    }
+        // Подождать, пока открывается и загружается экран ленты
+        // Перейти на экран профиля
+        // Проверить, что на нём отображаются ваши персональные данные
+        // Нажать кнопку логаута
+        // Проверить, что открылся экран авторизации
+        
+        sleep(2)
 
+        // переход на экран профиля
+        app.tabBars.buttons.element(boundBy: 0).tap() // нажмем таб с индексом 0 на tabbar
+        
+        // Проверить что на нем отображаются ваши персональные данные
+        XCTAssertTrue(app.staticTexts["Name Label"].exists)
+        XCTAssertTrue(app.staticTexts["NickName Label"].exists)
+        XCTAssertTrue(app.staticTexts["Text Label"].exists)
+        
+        // Нажать кнопку логаута
+        let logoutButton = app.buttons["logoutButton"]
+        logoutButton.tap()
+        
+        // Нажать на Да в алерте
+        app.alerts["Пока, пока!"].scrollViews.otherElements.buttons["Да"].tap()
+        
+        // Проверить что открылся экран авторизации
+        let authView = app.otherElements["AuthViewController"]
+        XCTAssertTrue(authView.waitForExistence(timeout: 1))
+    }
 }
