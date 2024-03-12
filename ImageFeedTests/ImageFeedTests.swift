@@ -72,6 +72,26 @@ final class ImageFeedTests: XCTestCase {
         //then
         XCTAssertTrue(shouldHideProgress)
     }
+    
+    // тест для проверки что ссылка, полученная из authURL содержит все необходимые компоненты
+    func testAuthHelperAuthURL() {
+        //given
+        let configuration = AuthConfiguration.standart
+        let authHelper = AuthHelper(configuration: configuration)
+        
+        //when
+        let url = authHelper.authURL()
+        let urlString = url!.absoluteString
+        
+        //then
+        XCTAssertTrue(urlString.contains(configuration.authURLString))
+        XCTAssertTrue(urlString.contains(configuration.accessKey))
+        XCTAssertTrue(urlString.contains(configuration.redirectURI))
+        XCTAssertTrue(urlString.contains(configuration.secretKey))
+        XCTAssertTrue(urlString.contains(configuration.accessScope))
+        XCTAssertTrue(urlString.contains("code"))
+    }
+    
     override func setUpWithError() throws { }
 
     override func tearDownWithError() throws { }
