@@ -92,6 +92,23 @@ final class ImageFeedTests: XCTestCase {
         XCTAssertTrue(urlString.contains("code"))
     }
     
+    // тест для проверки того, что AuthHelper корректно распознает код из ссылки
+    func testCodeFromURL() {
+        //given
+        let authHelper = AuthHelper()
+        var urlComponents = URLComponents(string: "https://unsplash.com/oauth/authorize/native")!
+        urlComponents.queryItems = [
+            URLQueryItem(name: "code", value: "testCode")
+        ]
+        let url = urlComponents.url!
+        
+        //when
+        let code = authHelper.code(from: url)
+        
+        //then
+        XCTAssertEqual(code, "testCode")
+    }
+    
     override func setUpWithError() throws { }
 
     override func tearDownWithError() throws { }
