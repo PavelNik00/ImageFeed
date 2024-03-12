@@ -61,7 +61,7 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sdE-8c-JJO" userLabel="Like Button">
                                                     <rect key="frame" x="354" y="4" width="44" height="44"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                    <state key="normal" image="like_button_on"/>
+                                                    <state key="normal" image="like_button_off"/>
                                                     <connections>
                                                         <action selector="likeButtonClicked" destination="pZ9-It-hcX" eventType="touchUpInside" id="OTB-QT-AEG"/>
                                                     </connections>
@@ -219,9 +219,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dVL-fc-NhT">
+                            <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="Autentificate" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dVL-fc-NhT">
                                 <rect key="frame" x="16" y="724" width="382" height="48"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Autentificate"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="tge-BP-L9e"/>
                                 </constraints>
@@ -327,7 +328,7 @@
         <image name="Backward" width="24" height="24"/>
         <image name="Share_button" width="51" height="50"/>
         <image name="auth_screen_logo" width="60" height="60"/>
-        <image name="like_button_on" width="44" height="44"/>
+        <image name="like_button_off" width="44" height="44"/>
         <image name="nav_back_button" width="24" height="24"/>
         <image name="tab_editorial_active" width="75" height="49"/>
         <namedColor name="YP Black">

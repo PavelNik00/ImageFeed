@@ -23,7 +23,7 @@ final class ImageFeedUITests: XCTestCase {
     func testAuth() throws {
         
         // Нажать кнопку авторизации
-        app.buttons["Authenticate"].tap()
+        app.buttons["Autentificate"].tap()
         
         // Подождать, пока экран авторизации открывается и загружается
         let webView = app.webViews["UnsplashWebView"] // вернёт нужный WebView по accessibilityIdentifier
@@ -34,12 +34,15 @@ final class ImageFeedUITests: XCTestCase {
         XCTAssertTrue(loginTextField.waitForExistence(timeout: 5)) // подождет 5 секунд, пока loginTextField не появится
         loginTextField.tap() // тап по окну логина
         loginTextField.typeText("") // введет текст в поле ввода
-//        webView.swipeUp() // поможет скрыть клавиатуру после ввода текста
+        
+        // Нажать клавишу "Done", чтобы закрыть клавиатуру
+        app.buttons["Done"].tap()
+        webView.swipeUp() // поможет скрыть клавиатуру после ввода текста
         
         let passwordTextField = webView.descendants(matching: .secureTextField).element // найдет поле для ввода пароля
         XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5)) // подождет 5 секунд, пока passwordTextField не появится
         
-        passwordTextField.tap() // тап по окну логина
+        passwordTextField.tap() // тап по окну пароля
         passwordTextField.typeText("") // введет текст в поле ввода
         
         webView.swipeUp() // поможет скрыть клавиатуру после ввода текста
@@ -77,11 +80,11 @@ final class ImageFeedUITests: XCTestCase {
         sleep(2)
         
         // нажатие на лайк - постановка
-        cellToLike.buttons["like_button_on"].tap()
+        cellToLike.buttons["like_button_off"].tap()
         sleep(2)
         
         // нажатие на лайк - отмена
-        cellToLike.buttons["like_button_off"].tap()
+        cellToLike.buttons["like_button_on"].tap()
         sleep(2)
         
         // нажатие на верхнюю картинку
