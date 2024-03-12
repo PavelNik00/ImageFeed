@@ -20,7 +20,7 @@ protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
-final class WebViewViewController: UIViewController & WebViewViewControllerProtocol {
+final class WebViewViewController: UIViewController {
     var presenter: WebViewPresenterProtocol?
     
     // MARK: - Properties
@@ -31,26 +31,21 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
     @IBOutlet private var progressView: UIProgressView!
     
     // MARK: - Private Properties
+    private let identitfier = "WebViewViewController"
     private var estimatedProgressObservation: NSKeyValueObservation?
     //    private var alertPresenter: AlertPresenter?
     
-    fileprivate let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+//    fileprivate let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
     
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        webView.navigationDelegate = self
-        
-        estimatedProgressObservation = webView.observe(
-            \.estimatedProgress,
-             options: [],
-             changeHandler: { [weak self] _, _ in
-                 guard let self = self else { return }
-             })
+        webView.accessibilityIdentifier = "UnsplashWebView"
         
         webView.navigationDelegate = self
         presenter?.viewDidLoad()
+        progressObservation()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -81,16 +76,15 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
     ) {
         if keyPath == #keyPath(WKWebView.estimatedProgress) {
             presenter?.didUpdateProgressValue(webView.estimatedProgress)
-//            updateProgress()
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
     }
     
     // MARK: - Public Methods
-    func load(request: URLRequest) {
-        webView.load(request)
-    }
+//    func load(request: URLRequest) {
+//        webView.load(request)
+//    }
     
     func webView(
         _ webView: WKWebView,
@@ -108,11 +102,15 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
         progressView.isHidden = isHidden
     }
     
-//    // MARK: - Private Func
-//    private func updateProgress() {
-//        progressView.setProgress(Float(webView.estimatedProgress), animated: true)
-//        progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
-//    }
+    private func progressObservation() {
+        estimatedProgressObservation = webView.observe(
+            \.estimatedProgress, options: [],
+             changeHandler: { [weak self] _, _ in
+                 guard let self = self else { return }
+                 presenter?.didUpdateProgressValue(webView.estimatedProgress)
+             }
+        )
+    }
     
     // MARK: - IB Action
     @IBAction private func didTapBackButton() {
@@ -142,20 +140,6 @@ extension WebViewViewController: WKNavigationDelegate {
             }
             return nil
         }
-    
-//    private func code(from navigationAction: WKNavigationAction) -> String? {
-//        if
-//            let url = navigationAction.request.url,
-//            let urlComponents = URLComponents(string: url.absoluteString),
-//            urlComponents.path == "/oauth/authorize/native",
-//            let items = urlComponents.queryItems,
-//            let codeItem = items.first(where: { $0.name == "code" })
-//        {
-//            return codeItem.value
-//        } else {
-//            return nil
-//        }
-//    }
 }
 
 //MARK: - AlertPresenter
@@ -173,5 +157,11 @@ extension WebViewViewController {
         }
         //        alertPresenter = AlertPresenter(delegate: self)
         AlertPresenter.showAlert(for: alert, in: self)
+    }
+}
+
+extension WebViewViewController: WebViewViewControllerProtocol {
+    func load(request: URLRequest) {
+        webView.load(request)
     }
 }

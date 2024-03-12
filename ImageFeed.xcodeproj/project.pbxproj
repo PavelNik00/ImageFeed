@@ -152,8 +152,8 @@
 			isa = PBXGroup;
 			children = (
 				E93B9A432B2B51F00032E56D /* ProfileViewController.swift */,
-				E9DAA1052B7BDE5F00A018ED /* ProfileImageService.swift */,
 				E9DAA0F12B72AAB300A018ED /* ProfileService.swift */,
+				E9DAA1052B7BDE5F00A018ED /* ProfileImageService.swift */,
 				E9E6D15E2B88CE0700CD3C39 /* ProfileLogoutService.swift */,
 			);
 			path = Profile;

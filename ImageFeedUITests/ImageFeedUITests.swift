@@ -5,6 +5,7 @@
 //  Created by Pavel Nikipelov on 06.03.2024.
 //
 
+@testable import ImageFeed
 import XCTest
 
 final class ImageFeedUITests: XCTestCase {
@@ -20,49 +21,55 @@ final class ImageFeedUITests: XCTestCase {
 
     func testAuth() throws {
         // тестируем сценарий авторизации
+    
+//        let authenticateButton = app.buttons["Authenticate"]
+//        XCTAssertTrue(authenticateButton.waitForExistence(timeout: 5), "Button 'Authenticate' not found")
+//        authenticateButton.tap()
         
-        /*
-         У приложения мы получаем список кнопок на экране и получаем нужную кнопку по тексту на ней
-         Далее вызываем функцию tap() для нажатия на этот элемент
-         */
+        sleep(2)
         
         // Нажать кнопку авторизации
-        
-        app.buttons["Authenticate"].tap()
-        
+        let authenticateButton = app.buttons["Войти"]
+        XCTAssertTrue(authenticateButton.waitForExistence(timeout: 5), "Button 'Войти' not found")
+        authenticateButton.tap()
+
             // Подождать, пока экран авторизации открывается и загружается
-        
-        let webView = app.webViews["UnsplashWebView"] // вернёт нужный WebView по accessibilityIdentifier
-        
-        XCTAssertTrue(webView.waitForExistence(timeout: 5)) // подождет 5 секунд, пока WebView не появится
+        let webView = app.webViews["WebViewViewController"] // вернёт нужный WebView по accessibilityIdentifier
+        XCTAssertTrue(webView.waitForExistence(timeout: 2)) // подождет 5 секунд, пока WebView не появится
         
             // Ввести данные в форму
-        
         let loginTextField = webView.descendants(matching: .textField).element // найдет поле для ввода логина
-        XCTAssertTrue(loginTextField.waitForExistence(timeout: 5)) // подождет 5 секунд, пока loginTextField не появится
-        
         loginTextField.tap() // тап по окну логина
-        loginTextField.typeText("") // введет текст в поле ввода
-        webView.swipeUp() // поможет скрыть клавиатуру после ввода текста
+        sleep(2)
+        loginTextField.typeText("pavelmdesign@gmail.com") // введет текст в поле ввода
+        sleep(2)
+        app.buttons["Done"].tap()
+//        loginTextField.swipeUp() // поможет скрыть клавиатуру после ввода текста
         
+        sleep(2)
         let passwordTextField = webView.descendants(matching: .secureTextField).element // найдет поле для ввода пароля
-        XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5)) // подождет 5 секунд, пока passwordTextField не появится
-        
-        passwordTextField.tap() // тап по окну логина
-        passwordTextField.typeText("") // введет текст в поле ввода
-        webView.swipeUp() // поможет скрыть клавиатуру после ввода текста
+//        XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5)) // подождет 5 секунд, пока passwordTextField не появится
+        passwordTextField.tap() // тап по окну пароля
+        sleep(2)
+        app.typeText("Sahasrara1010") // введет текст в поле ввода
+//        webView.swipeUp() // поможет скрыть клавиатуру после ввода текста
+        sleep(2)
+        app.buttons["Done"].tap()
+        sleep(2)
         
         // Нажать кнопку логина
         webView.buttons["Login"].tap()
         
-        print(app.debugDescription) // печатает в консоли дерево UI-элементов (для отладки и выявления проблем)
-        
-        let tablesQuery = app.tables // вернет таблицы на экран
-        
-        tablesQuery.children(matching: .cell).element(boundBy: 0) // вернет ячейку по индексу О
-        
         // Подождать, пока открывается экран ленты
+        sleep(2)
+        let tablesQuery = app.tables // вернет таблицы на экран
+        sleep(2)
+        
+        let cell = tablesQuery.children(matching: .cell).element(boundBy: 0) // вернет ячейку по индексу 0
+        
         XCTAssertTrue(cell.waitForExistence(timeout: 5)) //подождем появление ячейки на экране в течении 5 минут
+        sleep(2)
+        print(app.debugDescription) // печатает в консоли дерево UI-элементов (для отладки и выявления проблем)
     }
     
     func testFeed() throws {
@@ -118,8 +125,8 @@ final class ImageFeedUITests: XCTestCase {
 
         app.tabBars.buttons.element(boundBy: 0).tap() // нажмем таб с индексом 0 на tabbar
         
-        XCTAssertTrue(app.staticTexts["Name Lastname"].exists)
-        XCTAssertTrue(app.staticTexts["@username"].exists)
+        XCTAssertTrue(app.staticTexts["Pavel Krasnow"].exists)
+        XCTAssertTrue(app.staticTexts["@pavel00nik"].exists)
         
         app.buttons["logout_button"].tap()
         

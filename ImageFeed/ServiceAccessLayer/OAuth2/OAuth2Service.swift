@@ -66,16 +66,30 @@ final class OAuth2Service {
 // MARK: - Extensions
 extension OAuth2Service {
     func authTokenRequest(code: String) -> URLRequest? {
-        URLRequest.makeHTTPRequest(
+        
+        let params = AuthConfiguration.standart
+        
+        return URLRequest.makeHTTPRequest(
             path: "/oauth/token"
-            + "?client_id=\(Constants.accessKey)"
-            + "&&client_secret=\(Constants.secretKey)"
-            + "&&redirect_uri=\(Constants.redirectURI)"
+            + "?client_id=\(params.accessKey)"
+            + "&&client_secret=\(params.secretKey)"
+            + "&&redirect_uri=\(params.redirectURI)"
             + "&&code=\(code)"
             + "&&grant_type=authorization_code",
             httpMethod: "POST",
             baseURL: URL(string: "https://unsplash.com")!
         )
+    }
+    
+    private func makeRequest(code: String) -> URLRequest? {
+        if let url = URL(string: "...\(code)") {
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            return request
+        } else {
+            print("Failed to create URL")
+            return nil
+        }
     }
 }
 

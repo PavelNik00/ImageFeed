@@ -13,6 +13,7 @@ protocol AuthHelperProtocol {
 }
 
 final class AuthHelper: AuthHelperProtocol {
+    
     let configuration: AuthConfiguration
     
     init(configuration: AuthConfiguration = .standart) {
@@ -21,7 +22,6 @@ final class AuthHelper: AuthHelperProtocol {
     
     func authRequest() -> URLRequest? {
         guard let url = authURL() else { return nil }
-        
         return URLRequest(url: url)
     }
     
@@ -34,7 +34,8 @@ final class AuthHelper: AuthHelperProtocol {
             URLQueryItem(name: "client_id", value: configuration.accessKey),
             URLQueryItem(name: "redirect_uri", value: configuration.redirectURI),
             URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: configuration.accessScope)
+            URLQueryItem(name: "scope", value: configuration.accessScope),
+            URLQueryItem(name: "secretKey", value: configuration.secretKey)
         ]
         
         return urlComponents.url
@@ -51,5 +52,4 @@ final class AuthHelper: AuthHelperProtocol {
             return nil
         }
     }
-    
 }
