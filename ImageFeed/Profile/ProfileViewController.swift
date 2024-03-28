@@ -12,6 +12,7 @@ public protocol ProfileViewControllerProtocol: AnyObject {
     
     var presenter: ProfileViewPresenterProtocol? { get set }
     
+    func updateAvatar()
 }
 
 final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
@@ -37,6 +38,8 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         super.viewDidLoad()
         presenter = ProfileViewPresenter()
         
+        presenter?.addObserver()
+        
         view.backgroundColor = .ypBlack
         
         setupProfileImage()
@@ -45,32 +48,30 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         setupDescriptionLabel()
         setupLogoutButton()
         
+        updateAvatar()
         updateProfileDetails(profile: profileService.profile)
     }
     
     // MARK: - Private Func
     
-    deinit {
-        if let observer = profileImageServiceObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
+    func updateAvatar() {
+        let url = presenter?.updateAvatar()
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 61)
+        self.profileImage.kf.indicatorType = .activity
+        self.profileImage.kf.setImage(
+            with: url,
+            placeholder: UIImage(named: "placeholder"),
+            options: [.processor(processor)]
+        )
     }
+    
     
     private func updateProfileDetails(profile: Profile?) {
         guard let profile = profile else { return }
         nameLabel.text = profile.name
         loginNameLabel.text = profile.loginName
         descriptionLabel.text = profile.bio
-        
-        profileImageServiceObserver = NotificationCenter.default.addObserver(
-            forName: ProfileImageService.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            guard let self = self else { return }
-            self.updateAvatar()
-        }
-        updateAvatar()
     }
     
     private func setupProfileImage() {
@@ -129,57 +130,9 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
     }
-    
-//        private func switchToSplashViewController() {
-//            if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
-//                sceneDelegate.showInitialScreen()
-//            }
-//        }
-//    
-//        private func showLogoutAlert() {
-//            
-//            let alert = AlertModelRepeat(
-//                title: "Пока, пока!",
-//                message: "Уверены что хотите выйти?",
-//                buttonText: "Да",
-//                cancelButtonText: "Нет"
-//            ) { [weak self] isConfirmd in
-//                guard let self = self else { return }
-//                if isConfirmd {
-//                    ProfileLogoutService.shared.logout()
-//                    self.switchToSplashViewController()
-//                }
-//            }
-//            AlertPresenter.showAlert(for: alert, in: self)
-//        }
 
-    
     // MARK: - IB Action
     @IBAction private func didTapLogoutButton() {
         presenter?.showLogoutAlert(in: self)
-    }
-}
-
-
-private extension ProfileViewController {
-    private func updateAvatar() {
-        guard let profileImageURL = profileImageService.avatarUrl,
-            let url = URL(string: profileImageURL) else { return }
-        
-        let processor = RoundCornerImageProcessor(cornerRadius: 61)
-        profileImage.kf.indicatorType = .activity
-        profileImage.kf.setImage(
-            with: url,
-            placeholder: UIImage(named: "placeholder"),
-            options: [.processor(processor)]
-        ) {
-            result in
-            switch result {
-            case .success(let value):
-                print(value.image)
-            case .failure(let error):
-                print(error)
-            }
-        }
     }
 }
