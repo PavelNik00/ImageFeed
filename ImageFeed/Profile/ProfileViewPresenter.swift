@@ -21,6 +21,9 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     
     private let profileImage = UIImageView(image: UIImage(named: "avatar"))
     
+    // MARK: - Public properties
+    weak var viewController: ProfileViewControllerProtocol?
+    
     func addObserver() {
         NotificationCenter.default.addObserver(
             forName: ProfileImageService.didChangeNotification,
@@ -28,13 +31,9 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
             queue: .main
         ) { [weak self] _ in
             guard let self = self else { return }
-            _ = updateAvatar()
+            self.viewController?.updateAvatar()
         }
     }
-    
-    
-    // MARK: - Public properties
-    weak var viewController: ProfileViewControllerProtocol?
     
     func showLogoutAlert(in viewController: UIViewController) {
         

@@ -9,10 +9,9 @@ import UIKit
 import Kingfisher
 
 public protocol ProfileViewControllerProtocol: AnyObject {
-    
+    func updateAvatar()
     var presenter: ProfileViewPresenterProtocol? { get set }
     
-    func updateAvatar()
 }
 
 final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
@@ -37,7 +36,6 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = ProfileViewPresenter()
-        
         presenter?.addObserver()
         
         view.backgroundColor = .ypBlack
