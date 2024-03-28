@@ -8,7 +8,16 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+public protocol ProfileViewControllerProtocol: AnyObject {
+    
+    var presenter: ProfileViewPresenterProtocol? { get set }
+    
+}
+
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
+    
+    // MARK: - Public properties
+    var presenter: ProfileViewPresenterProtocol?
     
     // MARK: - Private Properties
     
@@ -26,6 +35,7 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter = ProfileViewPresenter()
         
         view.backgroundColor = .ypBlack
         
@@ -120,35 +130,36 @@ final class ProfileViewController: UIViewController {
         view.addSubview(label)
     }
     
-    private func switchToSplashViewController() {
-        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
-            sceneDelegate.showInitialScreen()
-        }
-    }
-    
-    private func showLogoutAlert() {
-        
-        let alert = AlertModelRepeat(
-            title: "Пока, пока!",
-            message: "Уверены что хотите выйти?",
-            buttonText: "Да",
-            cancelButtonText: "Нет"
-        ) { [weak self] isConfirmd in
-            guard let self = self else { return }
-            if isConfirmd {
-                ProfileLogoutService.shared.logout()
-                self.switchToSplashViewController()
-            }
-        }
-        AlertPresenter.showAlert(for: alert, in: self)
-    }
-    
+//        private func switchToSplashViewController() {
+//            if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+//                sceneDelegate.showInitialScreen()
+//            }
+//        }
+//    
+//        private func showLogoutAlert() {
+//            
+//            let alert = AlertModelRepeat(
+//                title: "Пока, пока!",
+//                message: "Уверены что хотите выйти?",
+//                buttonText: "Да",
+//                cancelButtonText: "Нет"
+//            ) { [weak self] isConfirmd in
+//                guard let self = self else { return }
+//                if isConfirmd {
+//                    ProfileLogoutService.shared.logout()
+//                    self.switchToSplashViewController()
+//                }
+//            }
+//            AlertPresenter.showAlert(for: alert, in: self)
+//        }
+
     
     // MARK: - IB Action
     @IBAction private func didTapLogoutButton() {
-        showLogoutAlert()
+        presenter?.showLogoutAlert(in: self)
     }
 }
+
 
 private extension ProfileViewController {
     private func updateAvatar() {
