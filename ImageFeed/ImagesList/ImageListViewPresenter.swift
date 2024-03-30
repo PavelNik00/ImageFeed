@@ -6,27 +6,37 @@
 //
 
 import Foundation
+import UIKit
 
 public protocol ImageListViewPresenterProtocol {
     
     var viewController: ImageListViewControllerProtocol? { get set }
-    var photos: [Photo] { get set }
     
     func fetchPhotos()
     func addObserver()
     func updateTableViewAnimated(oldCount: Int, newCount: Int)
     func loadingNextPage(at indexPath: IndexPath, photosCount: Int)
+    func formatDate(_ date: Date?) -> String
+    func showLikeError(in viewController: UIViewController)
     
 }
 
-final class ImageListViewPresenter: ImageListViewPresenterProtocol {
+final class ImageListViewPresenter: UIViewController, ImageListViewPresenterProtocol {
     
     weak var viewController: ImageListViewControllerProtocol?
     
     var imagesListServiceObserver: NSObjectProtocol?
     
-    var photos: [Photo] = []
+    private var alertPresenter: AlertModelProtocol?
+    
     private let imagesListService = ImagesListService.shared
+    
+    private var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
+    }()
     
     func fetchPhotos() {
         imagesListService.fetchPhotosNextPage()
@@ -63,5 +73,24 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
         }
     }
     
+    func formatDate(_ date: Date?) -> String {
+       guard let date = date else { return "" }
+       return dateFormatter.string(from: date)
+   }
+    
+    func showLikeError(in viewController: UIViewController) {
+        
+        let alert = AlertModel(
+            title: "Что-то пошло не так(",
+            message: "Не удалось поставить или убрать лайк",
+            buttonText: "ОК"
+        ) { [weak self] isConfirmed in
+            guard let self = self else { return }
+            if isConfirmed {
+                self.dismiss(animated: true)
+            }
+        }
+        AlertPresenter.showAlert(for: alert, in: viewController)
+    }
 
 }

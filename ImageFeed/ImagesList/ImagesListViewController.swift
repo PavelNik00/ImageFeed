@@ -12,28 +12,13 @@ final class ImagesListViewController: UIViewController, ImageListViewControllerP
     // MARK: - IB Outlets
     @IBOutlet private var tableView: UITableView!
     
+    var photos: [Photo] = []
     var presenter: ImageListViewPresenterProtocol?
     
     // MARK: - Public Properties
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    
-    private let photosName: [String] = Array(0..<20).map { "\($0)" }
-    
     private let imagesListService = ImagesListService.shared
-    
-    var photos: [Photo] = []
-    
-    private var imagesListServiceObserver: NSObjectProtocol?
-    
-    private var alertPresenter: AlertModelProtocol?
-    
-    private lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
-        return formatter
-    }()
-    
+            
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,8 +93,9 @@ extension ImagesListViewController: UITableViewDataSource {
             self.tableView.reloadRows(at: [indexPath], with: .automatic)
         }
         
+        
         let createdDate = image.createdAt
-        cell.dateLabel.text = createdDate != nil ? dateFormatter.string(from: createdDate!) : ""
+        cell.dateLabel.text = createdDate != nil ? presenter?.formatDate(image.createdAt) : ""
         
         let likeImage = image.isLiked ? UIImage(named: "like_button_on") : UIImage(named: "like_button_off")
         cell.likeButton.setImage(likeImage, for: .normal)
@@ -118,7 +104,7 @@ extension ImagesListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-                presenter?.loadingNextPage(at: indexPath, photosCount: photos.count)
+        presenter?.loadingNextPage(at: indexPath, photosCount: photos.count)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -172,26 +158,9 @@ extension ImagesListViewController: ImagesListCellDelegate {
                 UIBlockingProgressHUD.dismiss()
             case .failure:
                 UIBlockingProgressHUD.dismiss()
-                self.showLikeError()
+                self.presenter?.showLikeError(in: self)
             }
         }
     }
 }
 
-extension ImagesListViewController {
-    
-    private func showLikeError() {
-        
-        let alert = AlertModel(
-            title: "Что-то пошло не так(",
-            message: "Не удалось поставить или убрать лайк",
-            buttonText: "ОК"
-        ) { [weak self] isConfirmed in
-            guard let self = self else { return }
-            if isConfirmed {
-                self.dismiss(animated: true)
-            }
-        }
-        AlertPresenter.showAlert(for: alert, in: self)
-    }
-}
