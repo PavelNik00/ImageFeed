@@ -1,9 +1,18 @@
 import UIKit
 import Kingfisher
 
-final class ImagesListViewController: UIViewController {
+public protocol ImageListViewControllerProtocol: AnyObject {
+    var presenter: ImageListViewPresenterProtocol? { get set }
+    var photos: [Photo] { get set }
+    
+    func updateTableViewAnimated(oldCount: Int, newCount: Int)
+}
+
+final class ImagesListViewController: UIViewController, ImageListViewControllerProtocol {
     // MARK: - IB Outlets
     @IBOutlet private var tableView: UITableView!
+    
+    var presenter: ImageListViewPresenterProtocol?
     
     // MARK: - Public Properties
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
@@ -12,7 +21,7 @@ final class ImagesListViewController: UIViewController {
     
     private let imagesListService = ImagesListService.shared
     
-    private var photos: [Photo] = []
+    var photos: [Photo] = []
     
     private var imagesListServiceObserver: NSObjectProtocol?
     
@@ -28,17 +37,11 @@ final class ImagesListViewController: UIViewController {
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-        
-        imagesListServiceObserver = NotificationCenter.default.addObserver(
-            forName: ImagesListService.didChangeNotification,
-            object: nil,
-            queue: .main) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateTableViewAnimated()
-            }
-        imagesListService.fetchPhotosNextPage()
+                
+        setUpTable()
+        configurePresenter()
+        presenter?.fetchPhotos()
+        presenter?.addObserver()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -54,6 +57,20 @@ final class ImagesListViewController: UIViewController {
         } else {
             super.prepare(for: segue, sender: sender)
         }
+    }
+}
+
+extension ImagesListViewController {
+    
+    private func setUpTable() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+    }
+    
+    private func configurePresenter() {
+        presenter = ImageListViewPresenter()
+        presenter?.viewController = self
     }
 }
 
@@ -101,10 +118,7 @@ extension ImagesListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let numberOfRows = tableView.numberOfRows(inSection: indexPath.section)
-        if indexPath.row == numberOfRows - 1 {
-            imagesListService.fetchPhotosNextPage()
-        }
+                presenter?.loadingNextPage(at: indexPath, photosCount: photos.count)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -117,12 +131,12 @@ extension ImagesListViewController: UITableViewDataSource {
         let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
         return cellHeight
     }
+}
+
+extension ImagesListViewController {
     
-    func updateTableViewAnimated() {
-        let oldCount = photos.count
-        let newCount = imagesListService.photos.count
-        photos = imagesListService.photos
-        if oldCount != newCount {
+    func updateTableViewAnimated(oldCount: Int, newCount: Int) {
+        guard oldCount != newCount else { return }
             tableView.performBatchUpdates {
                 let indexPaths = (oldCount..<newCount).map { i in
                     IndexPath(row: i, section: 0)
@@ -131,7 +145,7 @@ extension ImagesListViewController: UITableViewDataSource {
             } completion: { _ in }
         }
     }
-}
+
 
 // MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
