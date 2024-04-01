@@ -9,10 +9,14 @@ import Foundation
 import WebKit
 
 final class ProfileLogoutService {
+    
+    // MARK: - Public Properties
     static let shared = ProfileLogoutService()
     
+    // MARK: - Initializers
     private init() { }
     
+    // MARK: - Public Methods
     func logout() {
         cleanCookies()
         clearProfile()
@@ -21,6 +25,7 @@ final class ProfileLogoutService {
         clearToken()
     }
     
+    // MARK: - Private Methods
     private func cleanCookies() {
         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
         WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in

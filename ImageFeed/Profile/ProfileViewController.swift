@@ -20,7 +20,6 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     var presenter: ProfileViewPresenterProtocol?
     
     // MARK: - Private Properties
-    
     private let profileImage = UIImageView()
     private let nameLabel = UILabel()
     private let loginNameLabel = UILabel()
@@ -50,8 +49,13 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         updateProfileDetails(profile: profileService.profile)
     }
     
-    // MARK: - Private Func
+    // MARK: - IB Action
+    @IBAction private func didTapLogoutButton() {
+        presenter?.showLogoutAlert(in: self)
+    }
     
+    // MARK: - Public Methods
+
     func updateAvatar() {
         let url = presenter?.updateAvatar()
         
@@ -64,7 +68,8 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         )
     }
     
-    
+    // MARK: - Private Methods
+
     private func updateProfileDetails(profile: Profile?) {
         guard let profile = profile else { return }
         nameLabel.text = profile.name
@@ -128,10 +133,5 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         label.font = UIFont.systemFont(ofSize: fontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
-    }
-
-    // MARK: - IB Action
-    @IBAction private func didTapLogoutButton() {
-        presenter?.showLogoutAlert(in: self)
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 
 final class OAuth2Service {
     
-    // MARK: - Properties
+    // MARK: - Public Properties
     static let shared = OAuth2Service()
     
     // MARK: - Private Properties
@@ -29,7 +29,7 @@ final class OAuth2Service {
         }
     }
     
-    // MARK: - Func
+    // MARK: - Public Methods
     func fetchOAuthToken(
         _ code: String,
         completion: @escaping (Result<String, Error>) -> Void

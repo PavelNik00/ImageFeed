@@ -13,16 +13,16 @@ final class ImagesListCell: UITableViewCell {
     weak var delegate: ImagesListCellDelegate?
     
     // MARK: - IB Outlets
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var cellImage: UIImageView!
+    @IBOutlet weak var gradient: UIImageView!
     @IBOutlet weak var likeButton: UIButton! {
         didSet {
             likeButton.accessibilityIdentifier = "likeButton"
         }
     }
     
-    @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var cellImage: UIImageView!
-    @IBOutlet weak var gradient: UIImageView!
-    
+    // MARK: - Overrides Methods
     override func prepareForReuse() {
         super.prepareForReuse()
         
@@ -34,6 +34,7 @@ final class ImagesListCell: UITableViewCell {
         delegate?.imageListCellDidTapLike(self)
     }
     
+    // MARK: - Public Methods
     func setIsLiked(_ isLiked: Bool) {
         let buttonImage = isLiked  ? UIImage(named: "like_button_on") : UIImage(named: "like_button_off")
         likeButton.setImage(buttonImage, for: .normal)

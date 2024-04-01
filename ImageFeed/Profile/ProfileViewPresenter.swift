@@ -13,17 +13,19 @@ public protocol ProfileViewPresenterProtocol {
     func showLogoutAlert(in viewController: UIViewController)
     func addObserver()
     func updateAvatar() -> URL?
-
+    
     var viewController: ProfileViewControllerProtocol? { get set }
 }
 
 final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     
-    private let profileImage = UIImageView(image: UIImage(named: "avatar"))
-    
     // MARK: - Public properties
     weak var viewController: ProfileViewControllerProtocol?
     
+    // MARK: - Private Properties
+    private let profileImage = UIImageView(image: UIImage(named: "avatar"))
+    
+    // MARK: - Public Methods
     func addObserver() {
         NotificationCenter.default.addObserver(
             forName: ProfileImageService.didChangeNotification,
@@ -54,7 +56,7 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     
     func updateAvatar() -> URL? {
         if let profileImageURL = ProfileImageService.shared.avatarUrl,
-              let url = URL(string: profileImageURL) {
+           let url = URL(string: profileImageURL) {
             return url
         } else {
             print("Пришлa пустая ссылка на аватарку")
@@ -62,6 +64,7 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
         }
     }
     
+    // MARK: - Private Methods
     private func switchToSplashViewController() {
         if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
             sceneDelegate.showInitialScreen()

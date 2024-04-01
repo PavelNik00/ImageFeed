@@ -22,14 +22,13 @@ public protocol WebViewControllerProtocol: AnyObject {
 
 final class WebViewViewController: UIViewController {
     
-    var presenter: WebViewPresenterProtocol?
-
-    // MARK: - Properties
-    weak var delegate: WebViewViewControllerDelegate?
-    
     // MARK: - IB Outlets
     @IBOutlet private var webView: WKWebView!
     @IBOutlet private var progressView: UIProgressView!
+    
+    // MARK: - Public Properties
+    var presenter: WebViewPresenterProtocol?
+    weak var delegate: WebViewViewControllerDelegate?
     
     // MARK: - Private Properties
     private let identitfier = "WebViewViewController"
@@ -56,7 +55,7 @@ final class WebViewViewController: UIViewController {
             forKeyPath: #keyPath(WKWebView.estimatedProgress),
             options: .new,
             context: nil)
-//        updateProgress()
+        //        updateProgress()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -68,7 +67,12 @@ final class WebViewViewController: UIViewController {
         )
     }
     
-    // MARK: - Func
+    // MARK: - IB Action
+    @IBAction private func didTapBackButton() {
+        delegate?.webViewViewControllerDidCancel(self)
+    }
+    
+    // MARK: - Public Methods
     override func observeValue(
         forKeyPath keyPath: String?,
         of object: Any?,
@@ -82,13 +86,27 @@ final class WebViewViewController: UIViewController {
         }
     }
     
-    // MARK: - Public Methods
     func setProgressValue(_ newValue: Float) {
         progressView.progress = newValue
     }
     
     func setProgressHidden(_ isHidden: Bool) {
         progressView.isHidden = isHidden
+    }
+    
+    func webView(
+        _ webView: WKWebView,
+        didFailProvisionalNavigation navigation: WKNavigation!,
+        withError error: Error
+    ) {
+        showNetworkError()
+    }
+    
+    // MARK: - Private Methods
+    
+    private func updateProgress() {
+        progressView.setProgress(Float(webView.estimatedProgress), animated: true)
+        progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
     }
     
     private func progressObservation() {
@@ -100,28 +118,9 @@ final class WebViewViewController: UIViewController {
              }
         )
     }
-    
-    func webView(
-        _ webView: WKWebView,
-        didFailProvisionalNavigation navigation: WKNavigation!,
-        withError error: Error
-    ) {
-        showNetworkError()
-    }
-    
-    // MARK: - Private Func
-    private func updateProgress() {
-        progressView.setProgress(Float(webView.estimatedProgress), animated: true)
-        progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
-    }
-    
-    // MARK: - IB Action
-    @IBAction private func didTapBackButton() {
-        delegate?.webViewViewControllerDidCancel(self)
-    }
 }
 
-// MARK: - Extension
+// MARK: - WKNavigationDelegate
 extension WebViewViewController: WKNavigationDelegate {
     func webView(
         _ webView: WKWebView,
@@ -157,11 +156,11 @@ extension WebViewViewController {
                 dismiss(animated: true)
             }
         }
-        //        alertPresenter = AlertPresenter(delegate: self)
         AlertPresenter.showAlert(for: alert, in: self)
     }
 }
 
+// MARK: - Extension
 extension WebViewViewController: WebViewControllerProtocol {
     func load(request: URLRequest) {
         webView.load(request)

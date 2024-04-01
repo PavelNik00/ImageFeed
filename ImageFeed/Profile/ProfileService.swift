@@ -9,16 +9,19 @@ import Foundation
 
 final class ProfileService {
     
+    // MARK: - Public Properties
     static let shared = ProfileService()
     
+    // MARK: - Private Properties
     private var task: URLSessionTask?
     private let urlSession = URLSession.shared
     
     private(set) var profile: Profile?
+    
+    // MARK: - Initializers
     private init() {}
     
     // MARK: - Public Methods
-    
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         assert(Thread.isMainThread)
         if profile != nil { return }

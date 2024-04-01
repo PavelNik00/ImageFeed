@@ -9,9 +9,11 @@ import Foundation
 
 final class ImagesListService {
     
+    // MARK: - Public Properties
+    static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     static let shared = ImagesListService()
     
-    internal init() {}
+    // MARK: - Private Properties
     private (set) var photos: [Photo] = []
     private let dateFormatter = ISO8601DateFormatter()
     private var lastLoadedPage: Int?
@@ -19,8 +21,10 @@ final class ImagesListService {
     private let oauth2TokenStorage = OAuth2TokenStorage.shared
     private var task: URLSessionTask?
     
-    static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
+    // MARK: - Initializers
+    internal init() {}
     
+    // MARK: - Public Methods
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
         if task != nil { return }
@@ -76,33 +80,7 @@ final class ImagesListService {
     }
 }
 
-// MARK: - Methods
-private extension ImagesListService {
-    func nextPageRequest(nextPage: Int) -> URLRequest? {
-        let imageListURL = Constants.defaultBaseURL.absoluteString + "/photos"
-        var urlComponents = URLComponents(string: imageListURL)
-        urlComponents?.queryItems = [
-            URLQueryItem(name: "page", value: "\(nextPage)"),
-        ]
-        
-        guard let finalUrl = urlComponents?.url else {
-            print("Failed to create URL from components")
-            return nil
-        }
-        
-        var request = URLRequest(url: finalUrl)
-        request.httpMethod = "GET"
-        
-        guard let bearerToken = oauth2TokenStorage.token else {
-            print("OAuth token is missing")
-        return nil
-        }
-    
-        request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
-        return request
-    }
-}
-
+// MARK: - Public Methods
 extension ImagesListService {
     func changeLike(photoId: String,
                     isLike: Bool,
@@ -135,5 +113,32 @@ extension ImagesListService {
             }
         }
         task.resume()
+    }
+}
+
+// MARK: - Private Methods
+private extension ImagesListService {
+    func nextPageRequest(nextPage: Int) -> URLRequest? {
+        let imageListURL = Constants.defaultBaseURL.absoluteString + "/photos"
+        var urlComponents = URLComponents(string: imageListURL)
+        urlComponents?.queryItems = [
+            URLQueryItem(name: "page", value: "\(nextPage)"),
+        ]
+        
+        guard let finalUrl = urlComponents?.url else {
+            print("Failed to create URL from components")
+            return nil
+        }
+        
+        var request = URLRequest(url: finalUrl)
+        request.httpMethod = "GET"
+        
+        guard let bearerToken = oauth2TokenStorage.token else {
+            print("OAuth token is missing")
+        return nil
+        }
+    
+        request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+        return request
     }
 }

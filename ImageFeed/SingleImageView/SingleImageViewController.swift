@@ -10,6 +10,12 @@ import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     
+    // MARK: - IBOutlets
+    
+    @IBOutlet private weak var scrollView: UIScrollView!
+    @IBOutlet private var imageView: UIImageView!
+    @IBOutlet private weak var sharedButton: UIButton!
+    
     // MARK: - Public Properties
     
     var image: UIImage! {
@@ -26,11 +32,6 @@ final class SingleImageViewController: UIViewController {
     
     //    private var alertPresenter: AlertPresenter?
     
-    // MARK: - IBOutlets
-    
-    @IBOutlet private weak var scrollView: UIScrollView!
-    @IBOutlet private var imageView: UIImageView!
-    @IBOutlet private weak var sharedButton: UIButton!
     
     // MARK: - View Life Cycles
     
@@ -41,6 +42,35 @@ final class SingleImageViewController: UIViewController {
         
         setupBackButton()
         setImageWithURL()
+    }
+    
+    // MARK: - IB Action
+    @IBAction func didTapBackButton() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func didTapShareButton(_ sender: Any) {
+        let share = UIActivityViewController(
+            activityItems: [image as Any],
+            applicationActivities: nil
+        )
+        present(share, animated: true, completion: nil)
+    }
+    
+    // MARK: - Public func
+    func setImageWithURL() {
+        guard let fullImageURL else { return }
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: fullImageURL) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            guard let self = self else { return }
+            switch result {
+            case .success(let imageResult):
+                self.image = imageResult.image
+            case .failure:
+                self.showError()
+            }
+        }
     }
     
     // MARK: - Private func
@@ -77,47 +107,21 @@ final class SingleImageViewController: UIViewController {
         backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
         
     }
-    
-    func setImageWithURL() {
-        guard let fullImageURL else { return }
-        UIBlockingProgressHUD.show()
-        imageView.kf.setImage(with: fullImageURL) { [weak self] result in
-            UIBlockingProgressHUD.dismiss()
-            guard let self = self else { return }
-            switch result {
-            case .success(let imageResult):
-                self.image = imageResult.image
-            case .failure:
-                self.showError()
-            }
-        }
-    }
-    
-    // MARK: - IB Action
-    @IBAction func didTapBackButton() {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    @IBAction func didTapShareButton(_ sender: Any) {
-        let share = UIActivityViewController(
-            activityItems: [image as Any],
-            applicationActivities: nil
-        )
-        present(share, animated: true, completion: nil)
-    }
 }
 
 // MARK: - UIScrollViewDelegate
+
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         imageView
     }
 }
 
+// MARK: - Extension
+
 extension SingleImageViewController {
     
     private func showError() {
-        
         let alert = AlertModelRepeat(
             title: "Что-то пошло не так. Попробовать ещё раз?",
             message: "Не удалось загрузить картинку",

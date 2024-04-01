@@ -16,12 +16,15 @@ protocol AuthHelperProtocol {
 
 class AuthHelper: AuthHelperProtocol {
     
+    // MARK: - Public Properties
     let configuration: AuthConfiguration
     
+    // MARK: - Initializers
     init(configuration: AuthConfiguration = .standart) {
         self.configuration = configuration
     }
     
+    // MARK: - Public Methods
     func authRequest() -> URLRequest? {
         guard let url = authURL() else { return nil }
         return URLRequest(url: url)

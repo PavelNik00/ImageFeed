@@ -18,15 +18,16 @@ public protocol ImageListViewPresenterProtocol {
     func loadingNextPage(at indexPath: IndexPath, photosCount: Int)
     func formatDate(_ date: Date?) -> String
     func showLikeError(in viewController: UIViewController)
-    
 }
 
 final class ImageListViewPresenter: UIViewController, ImageListViewPresenterProtocol {
     
+    // MARK: - Public Properties
     weak var viewController: ImageListViewControllerProtocol?
     
     var imagesListServiceObserver: NSObjectProtocol?
     
+    // MARK: - Private Properties
     private var alertPresenter: AlertModelProtocol?
     
     private let imagesListService = ImagesListService.shared
@@ -37,6 +38,8 @@ final class ImageListViewPresenter: UIViewController, ImageListViewPresenterProt
         formatter.timeStyle = .none
         return formatter
     }()
+    
+    // MARK: - Public Methods
     
     func fetchPhotos() {
         imagesListService.fetchPhotosNextPage()
@@ -49,15 +52,7 @@ final class ImageListViewPresenter: UIViewController, ImageListViewPresenterProt
             queue: .main) { [weak self] _ in
                 guard let self = self else { return }
                 self.handleDataChangeNotification()
-                
             }
-    }
-    
-    private func handleDataChangeNotification() {
-        let oldCount = viewController?.photos.count
-        let newCount = imagesListService.photos.count
-        viewController?.photos = imagesListService.photos
-        updateTableViewAnimated(oldCount: oldCount ?? 0, newCount: newCount)
     }
     
     func updateTableViewAnimated(oldCount: Int, newCount: Int) {
@@ -74,9 +69,9 @@ final class ImageListViewPresenter: UIViewController, ImageListViewPresenterProt
     }
     
     func formatDate(_ date: Date?) -> String {
-       guard let date = date else { return "" }
-       return dateFormatter.string(from: date)
-   }
+        guard let date = date else { return "" }
+        return dateFormatter.string(from: date)
+    }
     
     func showLikeError(in viewController: UIViewController) {
         
@@ -92,5 +87,12 @@ final class ImageListViewPresenter: UIViewController, ImageListViewPresenterProt
         }
         AlertPresenter.showAlert(for: alert, in: viewController)
     }
-
+    
+    // MARK: - Private Methods
+    private func handleDataChangeNotification() {
+        let oldCount = viewController?.photos.count
+        let newCount = imagesListService.photos.count
+        viewController?.photos = imagesListService.photos
+        updateTableViewAnimated(oldCount: oldCount ?? 0, newCount: newCount)
+    }
 }

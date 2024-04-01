@@ -9,20 +9,22 @@ public protocol ImageListViewControllerProtocol: AnyObject {
 }
 
 final class ImagesListViewController: UIViewController, ImageListViewControllerProtocol {
+    
     // MARK: - IB Outlets
     @IBOutlet private var tableView: UITableView!
     
+    // MARK: - Public Properties
     var photos: [Photo] = []
     var presenter: ImageListViewPresenterProtocol?
     
     // MARK: - Public Properties
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private let imagesListService = ImagesListService.shared
-            
+    
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        
         setUpTable()
         configurePresenter()
         presenter?.fetchPhotos()
@@ -32,7 +34,7 @@ final class ImagesListViewController: UIViewController, ImageListViewControllerP
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showSingleImageSegueIdentifier {
             if let viewController = segue.destination as? SingleImageViewController,
-               let indexPath = sender as? IndexPath, 
+               let indexPath = sender as? IndexPath,
                 indexPath.row < photos.count {
                 viewController.image = UIImage()
                 let imageUrl = photos[indexPath.row].largeImageURL
@@ -42,20 +44,6 @@ final class ImagesListViewController: UIViewController, ImageListViewControllerP
         } else {
             super.prepare(for: segue, sender: sender)
         }
-    }
-}
-
-extension ImagesListViewController {
-    
-    private func setUpTable() {
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-    }
-    
-    private func configurePresenter() {
-        presenter = ImageListViewPresenter()
-        presenter?.viewController = self
     }
 }
 
@@ -77,6 +65,21 @@ extension ImagesListViewController: UITableViewDataSource {
         configCell(for: imageListCell, with: indexPath)
         
         return imageListCell
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        presenter?.loadingNextPage(at: indexPath, photosCount: photos.count)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let image = photos[indexPath.row]
+        
+        let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
+        let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
+        let imageWidth = image.size.width
+        let scale = imageViewWidth / imageWidth
+        let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
+        return cellHeight
     }
     
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
@@ -102,36 +105,7 @@ extension ImagesListViewController: UITableViewDataSource {
         
         cell.delegate = self
     }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        presenter?.loadingNextPage(at: indexPath, photosCount: photos.count)
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let image = photos[indexPath.row]
-        
-        let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
-        let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
-        let imageWidth = image.size.width
-        let scale = imageViewWidth / imageWidth
-        let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
-        return cellHeight
-    }
 }
-
-extension ImagesListViewController {
-    
-    func updateTableViewAnimated(oldCount: Int, newCount: Int) {
-        guard oldCount != newCount else { return }
-            tableView.performBatchUpdates {
-                let indexPaths = (oldCount..<newCount).map { i in
-                    IndexPath(row: i, section: 0)
-                }
-                tableView.insertRows(at: indexPaths, with: .automatic)
-            } completion: { _ in }
-        }
-    }
-
 
 // MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
@@ -140,10 +114,9 @@ extension ImagesListViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - ImagesListCellDelegate
 extension ImagesListViewController: ImagesListCellDelegate {
-    
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
-        
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         
         let photo = photos[indexPath.row]
@@ -161,6 +134,33 @@ extension ImagesListViewController: ImagesListCellDelegate {
                 self.presenter?.showLikeError(in: self)
             }
         }
+    }
+}
+
+// MARK: - Extension
+extension ImagesListViewController {
+    func updateTableViewAnimated(oldCount: Int, newCount: Int) {
+        guard oldCount != newCount else { return }
+        tableView.performBatchUpdates {
+            let indexPaths = (oldCount..<newCount).map { i in
+                IndexPath(row: i, section: 0)
+            }
+            tableView.insertRows(at: indexPaths, with: .automatic)
+        } completion: { _ in }
+    }
+}
+
+extension ImagesListViewController {
+    
+    private func setUpTable() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+    }
+    
+    private func configurePresenter() {
+        presenter = ImageListViewPresenter()
+        presenter?.viewController = self
     }
 }
 
