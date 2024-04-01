@@ -23,7 +23,7 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     weak var viewController: ProfileViewControllerProtocol?
     
     // MARK: - Private Properties
-    private let profileImage = UIImageView(image: UIImage(named: "avatar"))
+    private let profileImage = UIImageView(image: UIImage(named: "mock_avatar_image"))
     
     // MARK: - Public Methods
     func addObserver() {
@@ -59,6 +59,7 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
            let url = URL(string: profileImageURL) {
             return url
         } else {
+            profileImage.image = UIImage(named: "mock_avatar_image")
             print("Пришлa пустая ссылка на аватарку")
             return nil
         }

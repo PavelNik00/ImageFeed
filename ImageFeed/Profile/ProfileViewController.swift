@@ -49,6 +49,12 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         updateProfileDetails(profile: profileService.profile)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        profileImage.layer.cornerRadius = profileImage.frame.size.width / 2
+    }
+    
+    
     // MARK: - IB Action
     @IBAction private func didTapLogoutButton() {
         presenter?.showLogoutAlert(in: self)
