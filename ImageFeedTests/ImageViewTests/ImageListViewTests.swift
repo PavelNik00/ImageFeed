@@ -5,9 +5,9 @@
 //  Created by Pavel Nikipelov on 31.03.2024.
 //
 
-import Foundation
-
 @testable import ImageFeed
+
+import Foundation
 import XCTest
 
 final class ImageListViewTests: XCTestCase {

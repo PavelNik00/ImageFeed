@@ -21,6 +21,9 @@ final class SingleImageViewController: UIViewController {
     
     var fullImageURL: URL?
     
+    // MARK: - Private Properties
+    private let backButton = UIButton(type: .custom)
+    
     //    private var alertPresenter: AlertPresenter?
     
     // MARK: - IBOutlets
@@ -36,6 +39,7 @@ final class SingleImageViewController: UIViewController {
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
         
+        setupBackButton()
         setImageWithURL()
     }
     
@@ -56,6 +60,22 @@ final class SingleImageViewController: UIViewController {
         let x = (newContentSize.width - visibleRectSize.width) / 2
         let y = (newContentSize.height - visibleRectSize.height) / 2
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
+    }
+    
+    private func setupBackButton() {
+        guard let image = UIImage(named: "BackwardWhite", in: Bundle.main, compatibleWith: nil) else {
+            return
+        }
+        
+        backButton.accessibilityIdentifier = "backButton"
+        backButton.setImage(image, for: .normal)
+        backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(backButton)
+        
+        backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8).isActive = true
+        backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
+        
     }
     
     func setImageWithURL() {

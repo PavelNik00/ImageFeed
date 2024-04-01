@@ -13,7 +13,12 @@ final class ImagesListCell: UITableViewCell {
     weak var delegate: ImagesListCellDelegate?
     
     // MARK: - IB Outlets
-    @IBOutlet weak var likeButton: UIButton!
+    @IBOutlet weak var likeButton: UIButton! {
+        didSet {
+            likeButton.accessibilityIdentifier = "likeButton"
+        }
+    }
+    
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var cellImage: UIImageView!
     @IBOutlet weak var gradient: UIImageView!

@@ -29,5 +29,4 @@ final class ProfileViewPresenterSpy: ProfileViewPresenterProtocol {
         updateAvatarCalled = true
         return nil
     }
-        
 }

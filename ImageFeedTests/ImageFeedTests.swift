@@ -11,7 +11,7 @@ import XCTest
 import Foundation
 
 final class ImageFeedTests: XCTestCase {
-
+    
     // тест для проверки вызова viewDidLoad презентера и вьюконтроллера
     func testViewControllerCallsViewDidLoad() {
         // given
@@ -110,6 +110,5 @@ final class ImageFeedTests: XCTestCase {
     }
     
     override func setUpWithError() throws { }
-
     override func tearDownWithError() throws { }
 }

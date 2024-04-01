@@ -10,7 +10,7 @@ import XCTest
 final class ImageFeedUITests: XCTestCase {
     // переменная приложения
     private let app = XCUIApplication()
-
+    
     // функция запуска приложения
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -18,9 +18,16 @@ final class ImageFeedUITests: XCTestCase {
         // запуск приложения перед каждым тестом
         app.launch()
     }
-
+    
+    private func launch() {
+        app.launch()
+    }
+    
     // тестируем сценарий авторизации
     func testAuth() throws {
+        
+        let userMail = "user mail"
+        let userMailPassword = "user mail password"
         
         // Нажать кнопку авторизации
         app.buttons["Autentificate"].tap()
@@ -29,11 +36,12 @@ final class ImageFeedUITests: XCTestCase {
         let webView = app.webViews["UnsplashWebView"] // вернёт нужный WebView по accessibilityIdentifier
         XCTAssertTrue(webView.waitForExistence(timeout: 5)) // подождет 5 секунд, пока WebView не появится
         
-            // Ввести данные в форму
+        // Ввести данные в форму
         let loginTextField = webView.descendants(matching: .textField).element // найдет поле для ввода логина
         XCTAssertTrue(loginTextField.waitForExistence(timeout: 5)) // подождет 5 секунд, пока loginTextField не появится
+        
         loginTextField.tap() // тап по окну логина
-        loginTextField.typeText("") // введет текст в поле ввода
+        loginTextField.typeText(userMail) // введет текст в поле ввода
         
         // Нажать клавишу "Done", чтобы закрыть клавиатуру
         app.buttons["Done"].tap()
@@ -43,7 +51,7 @@ final class ImageFeedUITests: XCTestCase {
         XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5)) // подождет 5 секунд, пока passwordTextField не появится
         
         passwordTextField.tap() // тап по окну пароля
-        passwordTextField.typeText("") // введет текст в поле ввода
+        passwordTextField.typeText(userMailPassword) // введет текст в поле ввода
         
         webView.swipeUp() // поможет скрыть клавиатуру после ввода текста
         
@@ -69,6 +77,8 @@ final class ImageFeedUITests: XCTestCase {
         // Уменьшить картинку
         // Вернуться на экран ленты
         
+        launch()
+        
         // Подождать, пока открывается и загружается экран ленты
         let tablesQuery = app.tables // вернет таблицы на экране
         let cell = tablesQuery.children(matching: .cell).element(boundBy: 0) // вернет ячейку по индексу 0
@@ -80,15 +90,15 @@ final class ImageFeedUITests: XCTestCase {
         sleep(2)
         
         // нажатие на лайк - постановка
-        cellToLike.buttons["like_button_off"].tap()
+        cellToLike.buttons["likeButton"].tap()
         sleep(2)
         
         // нажатие на лайк - отмена
-        cellToLike.buttons["like_button_on"].tap()
+        cellToLike.buttons["likeButton"].tap()
         sleep(2)
         
         // нажатие на верхнюю картинку
-        cellToLike.tap()
+        cell.tap()
         sleep(2)
         
         // увеличение картинки
@@ -97,37 +107,51 @@ final class ImageFeedUITests: XCTestCase {
         image.pinch(withScale: 0.5, velocity: -1) // zoom out
         
         // вернет экран ленты
-        let navBackButton = app.buttons["nav_back_button"]
+        let navBackButton = app.buttons["backButton"]
         navBackButton.tap()
+        
+        XCTAssertTrue(cell.waitForExistence(timeout: 5))
+        print(app.debugDescription)
     }
     
     // тестируем сценарий профиля
     func testProfile() throws {
-        // Подождать, пока открывается и загружается экран ленты
-        // Перейти на экран профиля
-        // Проверить, что на нём отображаются ваши персональные данные
-        // Нажать кнопку логаута
-        // Проверить, что открылся экран авторизации
+        
+        let userName = "user name"
+        let userLogin = "user login"
+        let userBio = "user bio"
         
         sleep(2)
-
+        
         // переход на экран профиля
-        app.tabBars.buttons.element(boundBy: 0).tap() // нажмем таб с индексом 0 на tabbar
+        app.tabBars.buttons.element(boundBy: 1).tap() // нажмем таб с индексом 1 на tabbar
         
         // Проверить что на нем отображаются ваши персональные данные
-        XCTAssertTrue(app.staticTexts["Name Label"].exists)
-        XCTAssertTrue(app.staticTexts["NickName Label"].exists)
-        XCTAssertTrue(app.staticTexts["Text Label"].exists)
+        XCTAssertTrue(app.staticTexts[userName].exists)
+        XCTAssertTrue(app.staticTexts[userLogin].exists)
+        XCTAssertTrue(app.staticTexts[userBio].exists)
         
         // Нажать кнопку логаута
         let logoutButton = app.buttons["logoutButton"]
         logoutButton.tap()
+        XCTAssertTrue(logoutButton.waitForExistence(timeout: 5))
         
         // Нажать на Да в алерте
-        app.alerts["Пока, пока!"].scrollViews.otherElements.buttons["Да"].tap()
+        let alert = app.alerts["Пока, пока!"]
+        XCTAssert(alert.waitForExistence(timeout: 5))
         
-        // Проверить что открылся экран авторизации
-        let authView = app.otherElements["AuthViewController"]
-        XCTAssertTrue(authView.waitForExistence(timeout: 1))
+        alert.buttons["Да"].tap()
+        //        XCTAssert(alert.waitForExistence(timeout: 5))
+        
+        sleep(2)
+        
+        // Нажать кнопку авторизации
+        app.buttons["Autentificate"].tap()
+        
+        // Подождать, пока экран авторизации открывается и загружается
+        let webView = app.webViews["UnsplashWebView"] // вернёт нужный WebView по accessibilityIdentifier
+        XCTAssertTrue(webView.waitForExistence(timeout: 5)) // подождет 5 секунд, пока WebView не появится
+        
+        print(app.debugDescription)
     }
 }

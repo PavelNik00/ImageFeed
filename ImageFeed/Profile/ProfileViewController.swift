@@ -21,7 +21,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     
     // MARK: - Private Properties
     
-    private let profileImage = UIImageView(image: UIImage(named: "avatar"))
+    private let profileImage = UIImageView()
     private let nameLabel = UILabel()
     private let loginNameLabel = UILabel()
     private let descriptionLabel = UILabel()
@@ -108,10 +108,11 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     }
     
     private func setupLogoutButton() {
-        guard let image = UIImage(named: "logout_button", in: Bundle.main, compatibleWith: nil) else {
+        guard let image = UIImage(named: "logoutButton", in: Bundle.main, compatibleWith: nil) else {
             return
         }
         
+        logoutButton.accessibilityIdentifier = "logoutButton"
         logoutButton.setImage(image, for: .normal)
         logoutButton.addTarget(self, action: #selector(didTapLogoutButton), for: .touchUpInside)
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
