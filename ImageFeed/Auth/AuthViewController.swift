@@ -12,18 +12,25 @@ protocol AuthViewControllerDelegate: AnyObject {
 }
 
 final class AuthViewController: UIViewController {
-    // MARK: - Properties
+    
+    // MARK: - Public Properties
     weak var delegate: AuthViewControllerDelegate?
     
     // MARK: - Private Properties
     private let showWebViewSegueIdentifier = "ShowWebView"
     
-    // MARK: - Private Func
+    // MARK: - Public Methods
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showWebViewSegueIdentifier {
-            guard
-                let webViewViewController = segue.destination as? WebViewViewController
-            else { fatalError("Failed to prepare for \(showWebViewSegueIdentifier)") }
+            guard let webViewViewController = segue.destination as? WebViewViewController else {
+                assertionFailure("Failed to prepare for \(showWebViewSegueIdentifier)")
+                return
+            }
+            let authHelper = AuthHelper()
+            let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+            webViewViewController.presenter = webViewPresenter
+            webViewPresenter.view = webViewViewController
             webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)

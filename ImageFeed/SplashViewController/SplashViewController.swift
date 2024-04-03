@@ -9,7 +9,8 @@ import UIKit
 import ProgressHUD
 
 final class SplashViewController: UIViewController {
-    // MARK: - Properties
+    
+    // MARK: - Public Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
@@ -52,8 +53,8 @@ final class SplashViewController: UIViewController {
         setNeedsStatusBarAppearanceUpdate()
     }
     
-    // MARK: - Private Func
-    
+    // MARK: - Private Methods
+
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
@@ -71,9 +72,19 @@ final class SplashViewController: UIViewController {
     }
 }
 
-// MARK: - Extentsion
+// MARK: - AuthViewControllerDelegate
 
 extension SplashViewController: AuthViewControllerDelegate {
+    
+    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
+        UIBlockingProgressHUD.show()
+        dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            UIBlockingProgressHUD.show()
+            self.fetchOAuthToken(code)
+        }
+    }
+    
     private func switchToAuthViewController() {
         let storyboard = UIStoryboard(name: mainID, bundle: .main).instantiateViewController(
             identifier: authViewControllerID
@@ -85,15 +96,6 @@ extension SplashViewController: AuthViewControllerDelegate {
         authViewController.delegate = self
         authViewController.modalPresentationStyle = .fullScreen
         present(authViewController, animated: true)
-    }
-    
-    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
-        UIBlockingProgressHUD.show()
-        dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            UIBlockingProgressHUD.show()
-            self.fetchOAuthToken(code)
-        }
     }
     
     private func fetchOAuthToken(_ code: String) {

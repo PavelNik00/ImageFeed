@@ -14,9 +14,7 @@ final class ProfileImageService {
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
     //MARK: - Private Properties
-    
     private (set) var avatarUrl: String?
-    
     private var task: URLSessionTask?
     private let urlSession = URLSession.shared
     private let oauth2TokenStorage = OAuth2TokenStorage.shared
