@@ -16,16 +16,13 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var cellImage: UIImageView!
     @IBOutlet weak var gradient: UIImageView!
-    @IBOutlet weak var likeButton: UIButton! {
-        didSet {
-            likeButton.accessibilityIdentifier = "likeButton"
-        }
-    }
+    @IBOutlet weak var likeButton: UIButton!
     
     // MARK: - Overrides Methods
     override func prepareForReuse() {
         super.prepareForReuse()
         
+        setupViews()
         cellImage.kf.cancelDownloadTask()
     }
     
@@ -38,5 +35,9 @@ final class ImagesListCell: UITableViewCell {
     func setIsLiked(_ isLiked: Bool) {
         let buttonImage = isLiked  ? UIImage(named: "like_button_on") : UIImage(named: "like_button_off")
         likeButton.setImage(buttonImage, for: .normal)
+    }
+    
+    private func setupViews() {
+       likeButton.accessibilityIdentifier = "likeButton"
     }
 }

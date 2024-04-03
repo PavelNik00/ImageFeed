@@ -32,7 +32,6 @@
 		E9B015B72BA0A7970082C848 /* WebViewPresenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B015B52BA0A7730082C848 /* WebViewPresenterSpy.swift */; };
 		E9B015B92BA0A88E0082C848 /* WebViewViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B015B82BA0A88E0082C848 /* WebViewViewControllerSpy.swift */; };
 		E9B015C12BA0AAE30082C848 /* ImageFeedUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B015C02BA0AAE30082C848 /* ImageFeedUITests.swift */; };
-		E9B015C32BA0AAE30082C848 /* ImageFeedUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B015C22BA0AAE30082C848 /* ImageFeedUITestsLaunchTests.swift */; };
 		E9B0CEAA2B69313A0073168C /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B0CEA92B69313A0073168C /* OAuth2Service.swift */; };
 		E9B0CEAC2B69315B0073168C /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B0CEAB2B69315B0073168C /* OAuth2TokenStorage.swift */; };
 		E9B0CEAF2B695CFC0073168C /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B0CEAE2B695CFC0073168C /* SplashViewController.swift */; };
@@ -103,7 +102,6 @@
 		E9B015B82BA0A88E0082C848 /* WebViewViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewControllerSpy.swift; sourceTree = "<group>"; };
 		E9B015BE2BA0AAE30082C848 /* ImageFeedUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageFeedUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9B015C02BA0AAE30082C848 /* ImageFeedUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFeedUITests.swift; sourceTree = "<group>"; };
-		E9B015C22BA0AAE30082C848 /* ImageFeedUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFeedUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		E9B0CEA92B69313A0073168C /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
 		E9B0CEAB2B69315B0073168C /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		E9B0CEAE2B695CFC0073168C /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
@@ -281,7 +279,6 @@
 			isa = PBXGroup;
 			children = (
 				E9B015C02BA0AAE30082C848 /* ImageFeedUITests.swift */,
-				E9B015C22BA0AAE30082C848 /* ImageFeedUITestsLaunchTests.swift */,
 			);
 			path = ImageFeedUITests;
 			sourceTree = "<group>";
@@ -548,7 +545,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9B015C32BA0AAE30082C848 /* ImageFeedUITestsLaunchTests.swift in Sources */,
 				E9B015C12BA0AAE30082C848 /* ImageFeedUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

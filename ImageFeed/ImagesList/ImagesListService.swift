@@ -135,9 +135,9 @@ private extension ImagesListService {
         
         guard let bearerToken = oauth2TokenStorage.token else {
             print("OAuth token is missing")
-        return nil
+            return nil
         }
-    
+        
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         return request
     }

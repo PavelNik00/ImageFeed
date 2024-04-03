@@ -25,7 +25,7 @@ final class ImageListViewPresenter: UIViewController, ImageListViewPresenterProt
     // MARK: - Public Properties
     weak var viewController: ImageListViewControllerProtocol?
     
-    var imagesListServiceObserver: NSObjectProtocol?
+    private var imagesListServiceObserver: NSObjectProtocol?
     
     // MARK: - Private Properties
     private var alertPresenter: AlertModelProtocol?
@@ -61,11 +61,12 @@ final class ImageListViewPresenter: UIViewController, ImageListViewPresenterProt
     
     func loadingNextPage(at indexPath: IndexPath, photosCount: Int)  {
         if indexPath.row + 1 == photosCount {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                guard let self = self else { return }
-                self.fetchPhotos()
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+//                guard let self = self else { return }
+//                self.
+            fetchPhotos()
             }
-        }
+        
     }
     
     func formatDate(_ date: Date?) -> String {

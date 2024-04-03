@@ -14,10 +14,10 @@ protocol AuthHelperProtocol {
     func code(from url: URL) -> String?
 }
 
-class AuthHelper: AuthHelperProtocol {
+final class AuthHelper: AuthHelperProtocol {
     
     // MARK: - Public Properties
-    let configuration: AuthConfiguration
+    private let configuration: AuthConfiguration
     
     // MARK: - Initializers
     init(configuration: AuthConfiguration = .standart) {

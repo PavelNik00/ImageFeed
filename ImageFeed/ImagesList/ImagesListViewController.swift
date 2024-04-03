@@ -27,8 +27,8 @@ final class ImagesListViewController: UIViewController, ImageListViewControllerP
         
         setUpTable()
         configurePresenter()
-        presenter?.fetchPhotos()
         presenter?.addObserver()
+        presenter?.fetchPhotos()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -90,12 +90,13 @@ extension ImagesListViewController: UITableViewDataSource {
         cell.selectionStyle = .none
         
         cell.cellImage.kf.indicatorType = .activity
-        cell.cellImage.kf.setImage(with: thumbnailURL,
-                                   placeholder: UIImage(named: "FeedImagePlaceholder")) { [weak self] _ in
+        cell.cellImage.kf.setImage(
+            with: thumbnailURL,
+            placeholder: UIImage(named: "FeedImagePlaceholder")
+        ) { [weak self] _ in
             guard let self = self else { return }
             self.tableView.reloadRows(at: [indexPath], with: .automatic)
         }
-        
         
         let createdDate = image.createdAt
         cell.dateLabel.text = createdDate != nil ? presenter?.formatDate(image.createdAt) : ""
