@@ -1,5 +1,7 @@
 # Image Feed
 
+![Image-37](https://github.com/PavelNik00/ImageFeed/assets/143431196/9a04121f-8dca-4fb9-ad8c-a00e66de4c3f)
+
 # Ссылки
 
 - [Дизайн в Figma](https://clck.ru/38ddGT)
